@@ -13,6 +13,8 @@ class AppTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.textInputAction,
+    this.useUnderline = false,
+    this.labelTrailing,
   });
 
   final TextEditingController controller;
@@ -24,20 +26,30 @@ class AppTextField extends StatelessWidget {
   final IconData? prefixIcon;
   final Widget? suffixIcon;
   final TextInputAction? textInputAction;
+  final bool useUnderline;
+  final Widget? labelTrailing;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textSecondary,
-            letterSpacing: 0.3,
-          ),
+        Row(
+          children: [
+            Text(
+              label.toUpperCase(),
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+                letterSpacing: 1.2,
+              ),
+            ),
+            if (labelTrailing != null) ...[
+              const Spacer(),
+              labelTrailing!,
+            ],
+          ],
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -53,9 +65,58 @@ class AppTextField extends StatelessWidget {
           ),
           decoration: InputDecoration(
             hintText: hint,
+            filled: !useUnderline,
+            fillColor: useUnderline ? Colors.transparent : AppColors.inputFill,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: useUnderline ? 0 : 20,
+              vertical: 16,
+            ),
+            border: useUnderline
+                ? const UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.border),
+                  )
+                : OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide.none,
+                  ),
+            enabledBorder: useUnderline
+                ? const UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.border),
+                  )
+                : OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide.none,
+                  ),
+            focusedBorder: useUnderline
+                ? const UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+                  )
+                : OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                  ),
+            errorBorder: useUnderline
+                ? const UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.error),
+                  )
+                : OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: AppColors.error),
+                  ),
+            focusedErrorBorder: useUnderline
+                ? const UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.error, width: 1.5),
+                  )
+                : OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+                  ),
             prefixIcon: prefixIcon != null
                 ? Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 12),
+                    padding: EdgeInsets.only(
+                      left: useUnderline ? 0 : 16,
+                      right: 12,
+                    ),
                     child: Icon(prefixIcon, size: 20),
                   )
                 : null,

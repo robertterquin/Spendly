@@ -75,46 +75,37 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 20),
-                  Center(
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryLight,
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: const Icon(
-                        Icons.person_add_rounded,
-                        size: 40,
-                        color: AppColors.primary,
-                      ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'SPENDLY',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.primary,
+                      letterSpacing: 2,
                     ),
                   ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 16),
                   const Text(
                     'Create Account',
-                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w800,
                       color: AppColors.textPrimary,
                       letterSpacing: -0.5,
                     ),
                   ),
                   const SizedBox(height: 6),
                   const Text(
-                    'Sign up to get started',
-                    textAlign: TextAlign.center,
+                    'Step into the digital suite of personal finance.',
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                       color: AppColors.textSecondary,
                     ),
                   ),
@@ -122,8 +113,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   AppTextField(
                     controller: _nameController,
                     label: 'Full Name',
-                    hint: 'John Doe',
-                    prefixIcon: Icons.person_outline,
+                    hint: 'Alexander Hamilton',
+                    useUnderline: true,
                     textInputAction: TextInputAction.next,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -132,12 +123,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
                   AppTextField(
                     controller: _emailController,
-                    label: 'Email',
-                    hint: 'you@example.com',
-                    prefixIcon: Icons.email_outlined,
+                    label: 'Email Address',
+                    hint: 'alexander@vault.com',
+                    useUnderline: true,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
                     validator: (value) {
@@ -151,12 +142,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
                   AppTextField(
                     controller: _passwordController,
                     label: 'Password',
                     hint: '••••••••',
-                    prefixIcon: Icons.lock_outline,
+                    useUnderline: true,
                     obscureText: _obscurePassword,
                     textInputAction: TextInputAction.next,
                     suffixIcon: IconButton(
@@ -165,6 +156,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             ? Icons.visibility_off_outlined
                             : Icons.visibility_outlined,
                         size: 20,
+                        color: AppColors.textSecondary,
                       ),
                       onPressed: () {
                         setState(() => _obscurePassword = !_obscurePassword);
@@ -180,12 +172,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
                   AppTextField(
                     controller: _confirmPasswordController,
-                    label: 'Confirm Password',
+                    label: 'Confirm',
                     hint: '••••••••',
-                    prefixIcon: Icons.lock_outline,
+                    useUnderline: true,
                     obscureText: _obscureConfirmPassword,
                     textInputAction: TextInputAction.done,
                     suffixIcon: IconButton(
@@ -194,6 +186,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             ? Icons.visibility_off_outlined
                             : Icons.visibility_outlined,
                         size: 20,
+                        color: AppColors.textSecondary,
                       ),
                       onPressed: () {
                         setState(() =>
@@ -213,6 +206,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   const SizedBox(height: 32),
                   ElevatedButton(
                     onPressed: isLoading ? null : _handleRegister,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(double.infinity, 52),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      elevation: 0,
+                    ),
                     child: isLoading
                         ? const SizedBox(
                             height: 20,
@@ -222,24 +224,127 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               color: Colors.white,
                             ),
                           )
-                        : const Text('Create Account'),
+                        : const Text(
+                            'Sign Up',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 24),
+                  // Divider
+                  Row(
+                    children: [
+                      const Expanded(child: Divider(color: AppColors.border)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'OR',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textSecondary.withValues(alpha: 0.7),
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                      ),
+                      const Expanded(child: Divider(color: AppColors.border)),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // Social buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () {},
+                          icon: const Text(
+                            'G',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          label: const Text(
+                            'Google',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size(0, 48),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            side: const BorderSide(color: AppColors.border),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.apple,
+                            size: 20,
+                            color: AppColors.textPrimary,
+                          ),
+                          label: const Text(
+                            'Apple',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size(0, 48),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            side: const BorderSide(color: AppColors.border),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        'Already have an account?',
+                        'Already part of Spendly?  ',
                         style: TextStyle(
                           color: AppColors.textSecondary,
-                          fontSize: 14,
+                          fontSize: 13,
                         ),
                       ),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Sign In'),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: const Text(
+                          'Log In',
+                          style: TextStyle(
+                            color: AppColors.tertiary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'BY SIGNING UP, YOU AGREE TO OUR\nTERMS OF SERVICE & PRIVACY POLICY',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textSecondary.withValues(alpha: 0.6),
+                      letterSpacing: 0.8,
+                      height: 1.6,
+                    ),
                   ),
                 ],
               ),

@@ -58,31 +58,40 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            // Top bar with back arrow and "Spendly"
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    size: 20,
-                    color: AppColors.textPrimary,
-                  ),
-                  style: IconButton.styleFrom(
-                    backgroundColor: AppColors.inputFill,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: const Icon(
+                      Icons.arrow_back,
+                      size: 22,
+                      color: AppColors.textPrimary,
                     ),
                   ),
-                ),
+                  const Spacer(),
+                  const Text(
+                    'Spendly',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const Spacer(),
+                  const SizedBox(width: 22),
+                ],
               ),
             ),
             Expanded(
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 28),
-                  child: _linkSent ? _buildSuccessMessage() : _buildForm(isLoading),
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: _linkSent
+                      ? _buildSuccessMessage()
+                      : _buildForm(isLoading),
                 ),
               ),
             ),
@@ -100,13 +109,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           width: 88,
           height: 88,
           decoration: BoxDecoration(
-            color: const Color(0xFFE8FAF0),
+            color: const Color(0xFFD1FAE5),
             borderRadius: BorderRadius.circular(24),
           ),
           child: const Icon(
             Icons.mark_email_read_rounded,
             size: 44,
-            color: AppColors.income,
+            color: AppColors.secondary,
           ),
         ),
         const SizedBox(height: 28),
@@ -132,6 +141,15 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         const SizedBox(height: 36),
         ElevatedButton(
           onPressed: () => Navigator.of(context).pop(),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            minimumSize: const Size(double.infinity, 52),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            elevation: 0,
+          ),
           child: const Text('Back to Sign In'),
         ),
       ],
@@ -142,41 +160,22 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     return Form(
       key: _formKey,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Center(
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: AppColors.primaryLight,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: const Icon(
-                Icons.lock_reset_rounded,
-                size: 40,
-                color: AppColors.primary,
-              ),
-            ),
-          ),
-          const SizedBox(height: 28),
           const Text(
             'Forgot Password?',
-            textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.w700,
+              fontSize: 30,
+              fontWeight: FontWeight.w800,
               color: AppColors.textPrimary,
               letterSpacing: -0.5,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           const Text(
-            'Enter your email and we\'ll send you\na link to reset your password.',
-            textAlign: TextAlign.center,
+            'Enter the email address associated with your vault. We\'ll send a secure link to reset your credentials.',
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 14,
               color: AppColors.textSecondary,
               height: 1.5,
             ),
@@ -184,11 +183,16 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           const SizedBox(height: 36),
           AppTextField(
             controller: _emailController,
-            label: 'Email',
-            hint: 'you@example.com',
-            prefixIcon: Icons.email_outlined,
+            label: 'Institutional Email',
+            hint: 'name@firm.com',
+            useUnderline: true,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.done,
+            suffixIcon: const Icon(
+              Icons.mail_outline,
+              size: 20,
+              color: AppColors.textSecondary,
+            ),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Email is required';
@@ -203,6 +207,15 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           const SizedBox(height: 32),
           ElevatedButton(
             onPressed: isLoading ? null : _handleSendReset,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 52),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              elevation: 0,
+            ),
             child: isLoading
                 ? const SizedBox(
                     height: 20,
@@ -212,12 +225,44 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       color: Colors.white,
                     ),
                   )
-                : const Text('Send Reset Link'),
+                : const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Send Reset Link',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Icon(Icons.arrow_forward, size: 18),
+                    ],
+                  ),
           ),
-          const SizedBox(height: 16),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Back to Sign In'),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Remembered your password?  ',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 13,
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: const Text(
+                  'Sign In',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

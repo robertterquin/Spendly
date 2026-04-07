@@ -11,6 +11,35 @@ Spendly is a personal budget tracker mobile app with authentication, transaction
 
 ---
 
+## Color Palette
+
+Use these colors consistently across all UI. Reference them from `shared/theme/` — never hardcode hex values inline.
+
+| Role | Name | Hex |
+|------|------|-----|
+| Primary | Navy | `#1A365D` |
+| Secondary | Emerald | `#10B981` |
+| Tertiary | Blue | `#3B82F6` |
+| Neutral | Off-white | `#F8FAFC` |
+
+**Usage guidelines:**
+- **Primary (`#1A365D`)** — app bar, headers, primary buttons, key UI chrome.
+- **Secondary (`#10B981`)** — income indicators, success states, CTAs (e.g. "Add Income").
+- **Tertiary (`#3B82F6`)** — accents, links, highlights, charts.
+- **Neutral (`#F8FAFC`)** — backgrounds, card surfaces, scaffold background.
+
+```dart
+// shared/theme/app_colors.dart
+class AppColors {
+  static const primary   = Color(0xFF1A365D);
+  static const secondary = Color(0xFF10B981);
+  static const tertiary  = Color(0xFF3B82F6);
+  static const neutral   = Color(0xFFF8FAFC);
+}
+```
+
+---
+
 ## Pages & Features
 
 ### 1. Splash Screen

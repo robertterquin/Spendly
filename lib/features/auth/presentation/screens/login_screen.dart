@@ -17,7 +17,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _rememberMe = false;
+  final bool _rememberMe = false;
   bool _obscurePassword = true;
 
   @override
@@ -65,182 +65,273 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 20),
-                  Center(
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryLight,
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: const Icon(
-                        Icons.account_balance_wallet_rounded,
-                        size: 40,
-                        color: AppColors.primary,
+                  children: [
+                    // Logo row
+                    Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.account_balance_wallet_rounded,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        const Text(
+                          'Spendly',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 28),
+                    const Text(
+                      'Welcome Back',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textPrimary,
+                        letterSpacing: -0.5,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 28),
-                  const Text(
-                    'Welcome Back',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  const Text(
-                    'Sign in to your account',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  AppTextField(
-                    controller: _emailController,
-                    label: 'Email',
-                    hint: 'you@example.com',
-                    prefixIcon: Icons.email_outlined,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Email is required';
-                      }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                          .hasMatch(value.trim())) {
-                        return 'Enter a valid email';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  AppTextField(
-                    controller: _passwordController,
-                    label: 'Password',
-                    hint: '••••••••',
-                    prefixIcon: Icons.lock_outline,
-                    obscureText: _obscurePassword,
-                    textInputAction: TextInputAction.done,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
-                        size: 20,
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Sign in to manage your spending.',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textSecondary,
                       ),
-                      onPressed: () {
-                        setState(() => _obscurePassword = !_obscurePassword);
+                    ),
+                    const SizedBox(height: 32),
+                    AppTextField(
+                      controller: _emailController,
+                      label: 'Email Address',
+                      hint: 'name@company.com',
+                      prefixIcon: Icons.alternate_email,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Email is required';
+                        }
+                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                            .hasMatch(value.trim())) {
+                          return 'Enter a valid email';
+                        }
+                        return null;
                       },
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Password is required';
-                      }
-                      if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 14),
-                  Row(
-                    children: [
-                      SizedBox(
-                        height: 22,
-                        width: 22,
-                        child: Checkbox(
-                          value: _rememberMe,
-                          onChanged: (value) {
-                            setState(() => _rememberMe = value ?? false);
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Remember me',
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 13,
-                        ),
-                      ),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () {
+                    const SizedBox(height: 20),
+                    AppTextField(
+                      controller: _passwordController,
+                      label: 'Password',
+                      hint: '••••••••',
+                      prefixIcon: Icons.lock_outline,
+                      obscureText: _obscurePassword,
+                      textInputAction: TextInputAction.done,
+                      labelTrailing: GestureDetector(
+                        onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => const ForgotPasswordScreen(),
                             ),
                           );
                         },
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
                         child: const Text(
                           'Forgot Password?',
-                          style: TextStyle(fontSize: 13),
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.tertiary,
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 28),
-                  ElevatedButton(
-                    onPressed: isLoading ? null : _handleLogin,
-                    child: isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : const Text('Sign In'),
-                  ),
-                  const SizedBox(height: 32),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Don't have an account?",
-                        style: TextStyle(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          size: 20,
                           color: AppColors.textSecondary,
-                          fontSize: 14,
                         ),
-                      ),
-                      TextButton(
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const RegisterScreen(),
-                            ),
-                          );
+                          setState(() => _obscurePassword = !_obscurePassword);
                         },
-                        child: const Text('Sign Up'),
                       ),
-                    ],
-                  ),
-                ],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Password is required';
+                        }
+                        if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 28),
+                    ElevatedButton(
+                      onPressed: isLoading ? null : _handleLogin,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(double.infinity, 52),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                Icon(Icons.arrow_forward, size: 18),
+                              ],
+                            ),
+                    ),
+                    const SizedBox(height: 28),
+                    // Divider
+                    Row(
+                      children: [
+                        const Expanded(child: Divider(color: AppColors.border)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'OR CONTINUE WITH',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textSecondary.withValues(alpha: 0.7),
+                              letterSpacing: 0.8,
+                            ),
+                          ),
+                        ),
+                        const Expanded(child: Divider(color: AppColors.border)),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Social buttons
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () {},
+                            icon: const Text(
+                              'G',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            label: const Text(
+                              'Google',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size(0, 48),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              side: const BorderSide(color: AppColors.border),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.apple,
+                              size: 20,
+                              color: AppColors.textPrimary,
+                            ),
+                            label: const Text(
+                              'Apple',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size(0, 48),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              side: const BorderSide(color: AppColors.border),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'New here? ',
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 13,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const RegisterScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Request Invitation',
+                            style: TextStyle(
+                              color: AppColors.tertiary,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
     );
   }
 }
