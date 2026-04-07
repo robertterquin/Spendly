@@ -33,9 +33,10 @@ class AppTextField extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            fontSize: 14,
+            fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: AppColors.textSecondary,
+            letterSpacing: 0.3,
           ),
         ),
         const SizedBox(height: 8),
@@ -45,9 +46,21 @@ class AppTextField extends StatelessWidget {
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           validator: validator,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            color: AppColors.textPrimary,
+          ),
           decoration: InputDecoration(
             hintText: hint,
-            prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+            prefixIcon: prefixIcon != null
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 12),
+                    child: Icon(prefixIcon, size: 20),
+                  )
+                : null,
+            prefixIconConstraints:
+                const BoxConstraints(minHeight: 20, minWidth: 20),
             suffixIcon: suffixIcon,
           ),
         ),

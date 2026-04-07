@@ -44,6 +44,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         SnackBar(
           content: Text(state.error.toString()),
           backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          margin: const EdgeInsets.all(16),
         ),
       );
     } else if (state.valueOrNull != null) {
@@ -58,37 +61,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final isLoading = authState.isLoading;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 28),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Icon(
-                    Icons.account_balance_wallet_rounded,
-                    size: 64,
-                    color: AppColors.primary,
+                  const SizedBox(height: 20),
+                  Center(
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryLight,
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: const Icon(
+                        Icons.account_balance_wallet_rounded,
+                        size: 40,
+                        color: AppColors.primary,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 28),
                   const Text(
                     'Welcome Back',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
+                      letterSpacing: -0.5,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   const Text(
-                    'Sign in to continue',
+                    'Sign in to your account',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 15,
                       color: AppColors.textSecondary,
                     ),
                   ),
@@ -96,7 +112,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   AppTextField(
                     controller: _emailController,
                     label: 'Email',
-                    hint: 'Enter your email',
+                    hint: 'you@example.com',
                     prefixIcon: Icons.email_outlined,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
@@ -115,15 +131,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   AppTextField(
                     controller: _passwordController,
                     label: 'Password',
-                    hint: 'Enter your password',
+                    hint: '••••••••',
                     prefixIcon: Icons.lock_outline,
                     obscureText: _obscurePassword,
                     textInputAction: TextInputAction.done,
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        size: 20,
                       ),
                       onPressed: () {
                         setState(() => _obscurePassword = !_obscurePassword);
@@ -139,24 +156,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 14),
                   Row(
                     children: [
                       SizedBox(
-                        height: 24,
-                        width: 24,
+                        height: 22,
+                        width: 22,
                         child: Checkbox(
                           value: _rememberMe,
                           onChanged: (value) {
                             setState(() => _rememberMe = value ?? false);
                           },
-                          activeColor: AppColors.primary,
                         ),
                       ),
                       const SizedBox(width: 8),
                       const Text(
                         'Remember me',
-                        style: TextStyle(color: AppColors.textSecondary),
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 13,
+                        ),
                       ),
                       const Spacer(),
                       TextButton(
@@ -167,11 +186,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           );
                         },
-                        child: const Text('Forgot Password?'),
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: const Text(
+                          'Forgot Password?',
+                          style: TextStyle(fontSize: 13),
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 28),
                   ElevatedButton(
                     onPressed: isLoading ? null : _handleLogin,
                     child: isLoading
@@ -183,15 +210,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               color: Colors.white,
                             ),
                           )
-                        : const Text('Login'),
+                        : const Text('Sign In'),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        "Don't have an account? ",
-                        style: TextStyle(color: AppColors.textSecondary),
+                        "Don't have an account?",
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 14,
+                        ),
                       ),
                       TextButton(
                         onPressed: () {
@@ -201,7 +231,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           );
                         },
-                        child: const Text('Register'),
+                        child: const Text('Sign Up'),
                       ),
                     ],
                   ),

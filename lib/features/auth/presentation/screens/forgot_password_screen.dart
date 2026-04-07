@@ -38,6 +38,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         SnackBar(
           content: Text(state.error.toString()),
           backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          margin: const EdgeInsets.all(16),
         ),
       );
     } else {
@@ -51,15 +54,39 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     final isLoading = authState.isLoading;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Forgot Password'),
-      ),
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: _linkSent ? _buildSuccessMessage() : _buildForm(isLoading),
-          ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 20,
+                    color: AppColors.textPrimary,
+                  ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: AppColors.inputFill,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 28),
+                  child: _linkSent ? _buildSuccessMessage() : _buildForm(isLoading),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -69,33 +96,43 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(
-          Icons.mark_email_read_rounded,
-          size: 80,
-          color: AppColors.income,
-        ),
-        const SizedBox(height: 24),
-        const Text(
-          'Reset Link Sent',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
+        Container(
+          width: 88,
+          height: 88,
+          decoration: BoxDecoration(
+            color: const Color(0xFFE8FAF0),
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: const Icon(
+            Icons.mark_email_read_rounded,
+            size: 44,
+            color: AppColors.income,
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 28),
+        const Text(
+          'Check Your Email',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+            letterSpacing: -0.5,
+          ),
+        ),
+        const SizedBox(height: 10),
         Text(
           'We sent a password reset link to\n${_emailController.text.trim()}',
           textAlign: TextAlign.center,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 15,
             color: AppColors.textSecondary,
+            height: 1.5,
           ),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 36),
         ElevatedButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Back to Login'),
+          child: const Text('Back to Sign In'),
         ),
       ],
     );
@@ -108,19 +145,30 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Icon(
-            Icons.lock_reset_rounded,
-            size: 64,
-            color: AppColors.primary,
+          Center(
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: AppColors.primaryLight,
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: const Icon(
+                Icons.lock_reset_rounded,
+                size: 40,
+                color: AppColors.primary,
+              ),
+            ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 28),
           const Text(
             'Forgot Password?',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
+              fontSize: 26,
+              fontWeight: FontWeight.w700,
               color: AppColors.textPrimary,
+              letterSpacing: -0.5,
             ),
           ),
           const SizedBox(height: 8),
@@ -128,15 +176,16 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             'Enter your email and we\'ll send you\na link to reset your password.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15,
               color: AppColors.textSecondary,
+              height: 1.5,
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 36),
           AppTextField(
             controller: _emailController,
             label: 'Email',
-            hint: 'Enter your registered email',
+            hint: 'you@example.com',
             prefixIcon: Icons.email_outlined,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.done,
@@ -168,7 +217,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           const SizedBox(height: 16),
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Back to Login'),
+            child: const Text('Back to Sign In'),
           ),
         ],
       ),

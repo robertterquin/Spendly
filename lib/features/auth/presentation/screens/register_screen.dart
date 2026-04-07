@@ -46,13 +46,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         SnackBar(
           content: Text(state.error.toString()),
           backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          margin: const EdgeInsets.all(16),
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Registration successful! Please log in.'),
+        SnackBar(
+          content: const Text('Registration successful! Please log in.'),
           backgroundColor: AppColors.income,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          margin: const EdgeInsets.all(16),
         ),
       );
       Navigator.of(context).pop();
@@ -65,45 +71,58 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final isLoading = authState.isLoading;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 28),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Icon(
-                    Icons.person_add_rounded,
-                    size: 64,
-                    color: AppColors.primary,
+                  const SizedBox(height: 20),
+                  Center(
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryLight,
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: const Icon(
+                        Icons.person_add_rounded,
+                        size: 40,
+                        color: AppColors.primary,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 28),
                   const Text(
                     'Create Account',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
+                      letterSpacing: -0.5,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   const Text(
                     'Sign up to get started',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 15,
                       color: AppColors.textSecondary,
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 36),
                   AppTextField(
                     controller: _nameController,
                     label: 'Full Name',
-                    hint: 'Enter your full name',
+                    hint: 'John Doe',
                     prefixIcon: Icons.person_outline,
                     textInputAction: TextInputAction.next,
                     validator: (value) {
@@ -117,7 +136,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   AppTextField(
                     controller: _emailController,
                     label: 'Email',
-                    hint: 'Enter your email',
+                    hint: 'you@example.com',
                     prefixIcon: Icons.email_outlined,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
@@ -136,15 +155,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   AppTextField(
                     controller: _passwordController,
                     label: 'Password',
-                    hint: 'Enter your password',
+                    hint: '••••••••',
                     prefixIcon: Icons.lock_outline,
                     obscureText: _obscurePassword,
                     textInputAction: TextInputAction.next,
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        size: 20,
                       ),
                       onPressed: () {
                         setState(() => _obscurePassword = !_obscurePassword);
@@ -164,15 +184,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   AppTextField(
                     controller: _confirmPasswordController,
                     label: 'Confirm Password',
-                    hint: 'Re-enter your password',
+                    hint: '••••••••',
                     prefixIcon: Icons.lock_outline,
                     obscureText: _obscureConfirmPassword,
                     textInputAction: TextInputAction.done,
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureConfirmPassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        size: 20,
                       ),
                       onPressed: () {
                         setState(() =>
@@ -201,19 +222,22 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               color: Colors.white,
                             ),
                           )
-                        : const Text('Register'),
+                        : const Text('Create Account'),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 28),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        'Already have an account? ',
-                        style: TextStyle(color: AppColors.textSecondary),
+                        'Already have an account?',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 14,
+                        ),
                       ),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Login'),
+                        child: const Text('Sign In'),
                       ),
                     ],
                   ),
