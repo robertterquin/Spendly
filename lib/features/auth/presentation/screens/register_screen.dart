@@ -143,7 +143,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       AppTextField(
                         controller: _nameController,
                         label: 'Full Name',
-                        hint: 'Alexander Hamilton',
+                        prefixIcon: Icons.person_outline,
                         useUnderline: true,
                         textInputAction: TextInputAction.next,
                         validator: (value) {
@@ -157,7 +157,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       AppTextField(
                         controller: _emailController,
                         label: 'Email Address',
-                        hint: 'alexander@vault.com',
+                        prefixIcon: Icons.alternate_email,
                         useUnderline: true,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
@@ -176,7 +176,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       AppTextField(
                         controller: _passwordController,
                         label: 'Password',
-                        hint: '••••••••',
+                        prefixIcon: Icons.lock_outline,
                         useUnderline: true,
                         obscureText: _obscurePassword,
                         textInputAction: TextInputAction.next,
@@ -206,7 +206,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       AppTextField(
                         controller: _confirmPasswordController,
                         label: 'Confirm',
-                        hint: '••••••••',
+                        prefixIcon: Icons.lock_outline,
                         useUnderline: true,
                         obscureText: _obscureConfirmPassword,
                         textInputAction: TextInputAction.done,

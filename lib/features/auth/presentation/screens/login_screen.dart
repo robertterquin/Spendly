@@ -151,7 +151,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       AppTextField(
                         controller: _emailController,
                         label: 'Email Address',
-                        hint: 'name@company.com',
                         prefixIcon: Icons.alternate_email,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
@@ -170,7 +169,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       AppTextField(
                         controller: _passwordController,
                         label: 'Password',
-                        hint: '••••••••',
                         prefixIcon: Icons.lock_outline,
                         obscureText: _obscurePassword,
                         textInputAction: TextInputAction.done,
