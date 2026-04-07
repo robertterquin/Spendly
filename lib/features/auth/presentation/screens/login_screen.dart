@@ -4,6 +4,7 @@ import 'package:spendly/features/auth/presentation/providers/auth_provider.dart'
 import 'package:spendly/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:spendly/features/auth/presentation/screens/register_screen.dart';
 import 'package:spendly/shared/theme/app_theme.dart';
+import 'package:spendly/shared/widgets/app_navigation_shell.dart';
 import 'package:spendly/shared/widgets/app_text_field.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -50,8 +51,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
       );
     } else if (state.valueOrNull != null) {
-      // TODO: Replace with DashboardScreen navigation
-      Navigator.of(context).pushReplacementNamed('/dashboard');
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const AppNavigationShell()),
+      );
     }
   }
 

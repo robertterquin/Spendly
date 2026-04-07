@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendly/features/auth/presentation/providers/auth_provider.dart';
 import 'package:spendly/features/auth/presentation/screens/login_screen.dart';
 import 'package:spendly/shared/theme/app_theme.dart';
+import 'package:spendly/shared/widgets/app_navigation_shell.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -51,9 +52,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final user = ref.read(authProvider).valueOrNull;
 
     if (user != null) {
-      // TODO: Navigate to DashboardScreen once it's built
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const _PlaceholderDashboard()),
+        MaterialPageRoute(builder: (_) => const AppNavigationShell()),
       );
     } else {
       Navigator.of(context).pushReplacement(
@@ -141,14 +141,4 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 }
 
-// Temporary placeholder until Dashboard feature is built
-class _PlaceholderDashboard extends StatelessWidget {
-  const _PlaceholderDashboard();
 
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Dashboard — coming soon')),
-    );
-  }
-}
