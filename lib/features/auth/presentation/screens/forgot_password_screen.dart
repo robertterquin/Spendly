@@ -57,73 +57,78 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF1A365D),
-              Color(0xFF1E4A7A),
-              Color(0xFF2D6A9F),
+              Colors.white,
+              Color(0xFFEAF2FB),
             ],
           ),
         ),
         child: SafeArea(
           child: Column(
-          children: [
-            // Top bar with back arrow and "Spendly"
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: const Icon(
-                      Icons.arrow_back,
-                      size: 22,
-                      color: AppColors.textPrimary,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        size: 22,
+                        color: AppColors.primary,
+                      ),
                     ),
-                  ),
-                  const Spacer(),
-                  const Text(
-                    'Spendly',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
+                    const Spacer(),
+                    const Text(
+                      'Spendly',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.primary,
+                      ),
                     ),
-                  ),
-                  const Spacer(),
-                  const SizedBox(width: 22),
-                ],
+                    const Spacer(),
+                    const SizedBox(width: 22),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(28),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.06),
-                          blurRadius: 24,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(28),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.08),
+                            blurRadius: 32,
+                            spreadRadius: 0,
+                            offset: const Offset(0, 12),
+                          ),
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.05),
+                            blurRadius: 16,
+                            spreadRadius: 0,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: _linkSent
+                          ? _buildSuccessMessage()
+                          : _buildForm(isLoading),
                     ),
-                    child: _linkSent
-                        ? _buildSuccessMessage()
-                        : _buildForm(isLoading),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 
@@ -199,7 +204,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           ),
           const SizedBox(height: 12),
           const Text(
-            'Enter the email address associated with your vault. We\'ll send a secure link to reset your credentials.',
+            "Enter the email address associated with your account. We'll send a secure link to reset your credentials.",
             style: TextStyle(
               fontSize: 14,
               color: AppColors.textSecondary,
@@ -209,8 +214,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           const SizedBox(height: 36),
           AppTextField(
             controller: _emailController,
-            label: 'Institutional Email',
-            hint: 'name@firm.com',
+            label: 'Email Address',
+            hint: 'name@email.com',
             useUnderline: true,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.done,

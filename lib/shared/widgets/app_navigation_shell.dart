@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spendly/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:spendly/features/profile/presentation/screens/profile_screen.dart';
 import 'package:spendly/shared/theme/app_theme.dart';
 
 class AppNavigationShell extends StatefulWidget {
@@ -17,7 +18,7 @@ class _AppNavigationShellState extends State<AppNavigationShell> {
     _PlaceholderScreen(title: 'Add Transaction', icon: Icons.add_circle_outline_rounded),
     _PlaceholderScreen(title: 'History', icon: Icons.history_rounded),
     _PlaceholderScreen(title: 'Charts', icon: Icons.bar_chart_rounded),
-    _PlaceholderScreen(title: 'Profile', icon: Icons.person_outline_rounded),
+    ProfileScreen(),
   ];
 
   @override
