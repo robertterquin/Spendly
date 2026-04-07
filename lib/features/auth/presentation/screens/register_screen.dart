@@ -71,16 +71,40 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final isLoading = authState.isLoading;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF1A365D),
+              Color(0xFF1E4A7A),
+              Color(0xFF2D6A9F),
+            ],
+          ),
+        ),
+        child: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 24,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
                   const SizedBox(height: 8),
                   const Text(
                     'SPENDLY',
@@ -346,12 +370,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       height: 1.6,
                     ),
                   ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
-    );
+    ));
   }
 }

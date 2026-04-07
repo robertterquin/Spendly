@@ -54,9 +54,20 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     final isLoading = authState.isLoading;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF1A365D),
+              Color(0xFF1E4A7A),
+              Color(0xFF2D6A9F),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
           children: [
             // Top bar with back arrow and "Spendly"
             Padding(
@@ -88,16 +99,31 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             Expanded(
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: _linkSent
-                      ? _buildSuccessMessage()
-                      : _buildForm(isLoading),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.06),
+                          blurRadius: 24,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: _linkSent
+                        ? _buildSuccessMessage()
+                        : _buildForm(isLoading),
+                  ),
                 ),
               ),
             ),
           ],
         ),
       ),
+    ),
     );
   }
 
