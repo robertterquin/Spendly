@@ -51,28 +51,28 @@ class DashboardScreen extends ConsumerWidget {
                     Row(
                       children: [
                         _QuickAction(
-                          icon: Icons.add_rounded,
+                          assetPath: 'assets/icons/income.png',
                           label: 'Income',
                           color: AppColors.secondary,
                           onTap: () {},
                         ),
                         const SizedBox(width: 12),
                         _QuickAction(
-                          icon: Icons.remove_rounded,
+                          assetPath: 'assets/icons/expenses.png',
                           label: 'Expense',
                           color: AppColors.expense,
                           onTap: () {},
                         ),
                         const SizedBox(width: 12),
                         _QuickAction(
-                          icon: Icons.bar_chart_rounded,
+                          assetPath: 'assets/icons/line-chart.png',
                           label: 'Charts',
                           color: AppColors.tertiary,
                           onTap: () {},
                         ),
                         const SizedBox(width: 12),
                         _QuickAction(
-                          icon: Icons.history_rounded,
+                          assetPath: 'assets/icons/history.png',
                           label: 'History',
                           color: const Color(0xFF8B5CF6),
                           onTap: () {},
@@ -291,13 +291,13 @@ class _HeroSection extends StatelessWidget {
 
 class _QuickAction extends StatelessWidget {
   const _QuickAction({
-    required this.icon,
+    required this.assetPath,
     required this.label,
     required this.color,
     required this.onTap,
   });
 
-  final IconData icon;
+  final String assetPath;
   final String label;
   final Color color;
   final VoidCallback onTap;
@@ -329,7 +329,13 @@ class _QuickAction extends StatelessWidget {
                   color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, size: 20, color: color),
+                child: Padding(
+                  padding: const EdgeInsets.all(9),
+                  child: Image.asset(
+                    assetPath,
+                    color: color,
+                  ),
+                ),
               ),
               const SizedBox(height: 8),
               Text(
