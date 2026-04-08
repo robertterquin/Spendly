@@ -18,22 +18,37 @@ class RecentTransactionsList extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 40),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           children: [
-            Icon(
-              Icons.receipt_long_outlined,
-              size: 40,
-              color: AppColors.textSecondary.withValues(alpha: 0.4),
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: AppColors.background,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(
+                Icons.receipt_long_outlined,
+                size: 26,
+                color: AppColors.textSecondary.withValues(alpha: 0.5),
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             const Text(
               'No transactions yet',
               style: TextStyle(
-                color: AppColors.textSecondary,
+                color: AppColors.textPrimary,
                 fontSize: 14,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 4),
@@ -49,26 +64,13 @@ class RecentTransactionsList extends StatelessWidget {
       );
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        itemCount: transactions.length,
-        separatorBuilder: (_, __) => const Divider(
-          height: 1,
-          indent: 64,
-          color: AppColors.border,
-        ),
-        itemBuilder: (context, index) {
-          final tx = transactions[index];
-          return _TransactionTile(transaction: tx);
-        },
-      ),
+    return Column(
+      children: List.generate(transactions.length, (index) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: index < transactions.length - 1 ? 10 : 0),
+          child: _TransactionTile(transaction: transactions[index]),
+        );
+      }),
     );
   }
 }
@@ -77,6 +79,17 @@ class _TransactionTile extends StatelessWidget {
   const _TransactionTile({required this.transaction});
 
   final TransactionModel transaction;
+
+  String get _dateLabel {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final txDay = DateTime(
+        transaction.date.year, transaction.date.month, transaction.date.day);
+    final diff = today.difference(txDay).inDays;
+    if (diff == 0) return 'Today';
+    if (diff == 1) return 'Yesterday';
+    return '${transaction.date.day}/${transaction.date.month}/${transaction.date.year}';
+  }
 
   IconData get _categoryIcon {
     switch (transaction.category.toLowerCase()) {
@@ -109,20 +122,31 @@ class _TransactionTile extends StatelessWidget {
     final color = isIncome ? AppColors.income : AppColors.expense;
     final sign = isIncome ? '+' : '-';
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Row(
         children: [
           Container(
-            width: 40,
-            height: 40,
+            width: 44,
+            height: 44,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(_categoryIcon, size: 20, color: color),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,9 +159,9 @@ class _TransactionTile extends StatelessWidget {
                     color: AppColors.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 3),
                 Text(
-                  '${transaction.date.day}/${transaction.date.month}/${transaction.date.year}',
+                  _dateLabel,
                   style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -146,13 +170,31 @@ class _TransactionTile extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            '$sign\$${transaction.amount.toStringAsFixed(2)}',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: color,
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '$sign\$${transaction.amount.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: color,
+                ),
+              ),
+              if (transaction.notes != null && transaction.notes!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 3),
+                  child: Text(
+                    transaction.notes!,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: AppColors.textSecondary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+            ],
           ),
         ],
       ),
