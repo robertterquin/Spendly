@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendly/features/auth/data/auth_repository.dart';
 import 'package:spendly/features/auth/domain/user_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository();
@@ -39,6 +40,8 @@ class AuthNotifier extends Notifier<AsyncValue<UserModel?>> {
         rememberMe: rememberMe,
       );
       state = AsyncData(user);
+    } on AuthException catch (e) {
+      state = AsyncError(Exception(e.message), StackTrace.current);
     } catch (e, st) {
       state = AsyncError(e, st);
     }
@@ -57,6 +60,8 @@ class AuthNotifier extends Notifier<AsyncValue<UserModel?>> {
         password: password,
       );
       state = const AsyncData(null);
+    } on AuthException catch (e) {
+      state = AsyncError(Exception(e.message), StackTrace.current);
     } catch (e, st) {
       state = AsyncError(e, st);
     }
@@ -67,6 +72,8 @@ class AuthNotifier extends Notifier<AsyncValue<UserModel?>> {
     try {
       await _repo.sendPasswordReset(email: email);
       state = const AsyncData(null);
+    } on AuthException catch (e) {
+      state = AsyncError(Exception(e.message), StackTrace.current);
     } catch (e, st) {
       state = AsyncError(e, st);
     }
