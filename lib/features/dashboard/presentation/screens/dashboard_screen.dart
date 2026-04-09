@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spendly/features/accounts/presentation/widgets/accounts_section.dart';
 import 'package:spendly/features/auth/presentation/providers/auth_provider.dart';
 import 'package:spendly/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:spendly/features/dashboard/presentation/widgets/balance_card.dart';
@@ -39,7 +40,7 @@ class DashboardScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Quick Actions',
+                      'Spending Breakdown',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -48,37 +49,68 @@ class DashboardScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 14),
-                    Row(
-                      children: [
-                        _QuickAction(
-                          assetPath: 'assets/icons/income.png',
-                          label: 'Income',
-                          color: AppColors.secondary,
-                          onTap: () {},
+                    if (summary.topExpenseCategories.isEmpty)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 28),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.06),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 12),
-                        _QuickAction(
-                          assetPath: 'assets/icons/expenses.png',
-                          label: 'Expense',
-                          color: AppColors.expense,
-                          onTap: () {},
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.pie_chart_outline_rounded,
+                              size: 32,
+                              color: AppColors.textSecondary.withValues(alpha: 0.5),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'No expenses this month',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: AppColors.textSecondary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 12),
-                        _QuickAction(
-                          assetPath: 'assets/icons/line-chart.png',
-                          label: 'Charts',
-                          color: AppColors.tertiary,
-                          onTap: () {},
+                      )
+                    else
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.06),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 12),
-                        _QuickAction(
-                          assetPath: 'assets/icons/history.png',
-                          label: 'History',
-                          color: const Color(0xFF8B5CF6),
-                          onTap: () {},
+                        child: Column(
+                          children: [
+                            for (int i = 0;
+                                i < summary.topExpenseCategories.length;
+                                i++) ...[
+                              if (i > 0) const SizedBox(height: 14),
+                              _CategoryBar(
+                                  category: summary.topExpenseCategories[i]),
+                            ],
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    const SizedBox(height: 32),
+                    const AccountsSection(),
                     const SizedBox(height: 32),
                     Row(
                       children: [
@@ -289,67 +321,76 @@ class _HeroSection extends StatelessWidget {
   }
 }
 
-class _QuickAction extends StatelessWidget {
-  const _QuickAction({
-    required this.assetPath,
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
+class _CategoryBar extends StatelessWidget {
+  const _CategoryBar({required this.category});
 
-  final String assetPath;
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
+  final CategorySpending category;
+
+  static const _categoryColors = {
+    'Food': Color(0xFFEF4444),
+    'Transport': Color(0xFF3B82F6),
+    'School': Color(0xFF8B5CF6),
+    'Bills': Color(0xFFF59E0B),
+    'Entertainment': Color(0xFFEC4899),
+    'Others': Color(0xFF6B7280),
+  };
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
+    final color = _categoryColors[category.category] ?? AppColors.tertiary;
+    return Column(
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
               ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(9),
-                  child: Image.asset(
-                    assetPath,
-                    color: color,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 11,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                category.category,
+                style: const TextStyle(
+                  fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: color,
+                  color: AppColors.textPrimary,
                 ),
               ),
-            ],
+            ),
+            Text(
+              '\$${category.amount.toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '${category.percentage.toStringAsFixed(0)}%',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: category.percentage / 100,
+            minHeight: 5,
+            backgroundColor: color.withValues(alpha: 0.12),
+            valueColor: AlwaysStoppedAnimation<Color>(color),
           ),
         ),
-      ),
+      ],
     );
   }
 }

@@ -67,19 +67,19 @@ class _AppNavigationShellState extends State<AppNavigationShell> {
                     onTap: () => setState(() => _currentIndex = 0),
                   ),
                   _NavItem(
-                    icon: Icons.add_circle_outline_rounded,
+                    assetPath: 'assets/icons/income.png',
                     label: 'Add',
                     isActive: _currentIndex == 1,
                     onTap: () => setState(() => _currentIndex = 1),
                   ),
                   _NavItem(
-                    icon: Icons.receipt_long_rounded,
+                    assetPath: 'assets/icons/history.png',
                     label: 'History',
                     isActive: _currentIndex == 2,
                     onTap: () => setState(() => _currentIndex = 2),
                   ),
                   _NavItem(
-                    icon: Icons.pie_chart_rounded,
+                    assetPath: 'assets/icons/line-chart.png',
                     label: 'Charts',
                     isActive: _currentIndex == 3,
                     onTap: () => setState(() => _currentIndex = 3),
@@ -102,19 +102,24 @@ class _AppNavigationShellState extends State<AppNavigationShell> {
 
 class _NavItem extends StatelessWidget {
   const _NavItem({
-    required this.icon,
+    this.icon,
+    this.assetPath,
     required this.label,
     required this.isActive,
     required this.onTap,
   });
 
-  final IconData icon;
+  final IconData? icon;
+  final String? assetPath;
   final String label;
   final bool isActive;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final activeColor = AppColors.primary;
+    final inactiveColor = AppColors.textSecondary;
+
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -128,15 +133,24 @@ class _NavItem extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               decoration: BoxDecoration(
                 color: isActive
-                    ? AppColors.primary.withValues(alpha: 0.1)
+                    ? activeColor.withValues(alpha: 0.1)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                icon,
-                size: 22,
-                color: isActive ? AppColors.primary : AppColors.textSecondary,
-              ),
+              child: assetPath != null
+                  ? SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: Image.asset(
+                        assetPath!,
+                        color: isActive ? activeColor : inactiveColor,
+                      ),
+                    )
+                  : Icon(
+                      icon,
+                      size: 22,
+                      color: isActive ? activeColor : inactiveColor,
+                    ),
             ),
             const SizedBox(height: 4),
             Text(
@@ -144,7 +158,7 @@ class _NavItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
-                color: isActive ? AppColors.primary : AppColors.textSecondary,
+                color: isActive ? activeColor : inactiveColor,
               ),
             ),
           ],
