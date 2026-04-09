@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:spendly/features/charts/presentation/screens/charts_screen.dart';
 import 'package:spendly/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:spendly/features/profile/presentation/screens/profile_screen.dart';
+import 'package:spendly/features/transactions/presentation/screens/add_transaction_screen.dart';
+import 'package:spendly/features/transactions/presentation/screens/transaction_history_screen.dart';
 import 'package:spendly/shared/theme/app_theme.dart';
 
 class AppNavigationShell extends StatefulWidget {
@@ -15,9 +18,9 @@ class _AppNavigationShellState extends State<AppNavigationShell> {
 
   final _screens = const [
     DashboardScreen(),
-    _PlaceholderScreen(title: 'Add Transaction', icon: Icons.add_circle_outline_rounded),
-    _PlaceholderScreen(title: 'History', icon: Icons.history_rounded),
-    _PlaceholderScreen(title: 'Charts', icon: Icons.bar_chart_rounded),
+    AddTransactionScreen(),
+    TransactionHistoryScreen(),
+    ChartsScreen(),
     ProfileScreen(),
   ];
 
@@ -142,56 +145,6 @@ class _NavItem extends StatelessWidget {
                 fontSize: 11,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
                 color: isActive ? AppColors.primary : AppColors.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PlaceholderScreen extends StatelessWidget {
-  const _PlaceholderScreen({
-    required this.title,
-    required this.icon,
-  });
-
-  final String title;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Icon(icon, size: 32, color: AppColors.primary),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Coming soon',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.textSecondary,
               ),
             ),
           ],
