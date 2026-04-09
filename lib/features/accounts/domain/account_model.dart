@@ -1,11 +1,11 @@
 class AccountModel {
   const AccountModel({
-    required this.id,
+    this.id = '',
     required this.userId,
     required this.name,
     required this.balance,
     required this.type,
-    required this.createdAt,
+    this.createdAt,
   });
 
   final String id;
@@ -13,24 +13,24 @@ class AccountModel {
   final String name;
   final double balance;
   final String type; // 'bank' | 'digital' | 'cash'
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'userId': userId,
+        'user_id': userId,
         'name': name,
         'balance': balance,
         'type': type,
-        'createdAt': createdAt.toIso8601String(),
       };
 
   factory AccountModel.fromJson(Map<String, dynamic> json) => AccountModel(
         id: json['id'] as String,
-        userId: json['userId'] as String,
+        userId: json['user_id'] as String,
         name: json['name'] as String,
         balance: (json['balance'] as num).toDouble(),
         type: json['type'] as String,
-        createdAt: DateTime.parse(json['createdAt'] as String),
+        createdAt: json['created_at'] != null
+            ? DateTime.parse(json['created_at'] as String)
+            : null,
       );
 
   AccountModel copyWith({

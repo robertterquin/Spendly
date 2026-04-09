@@ -726,12 +726,10 @@ class _AddAccountSheetState extends State<_AddAccountSheet> {
           widget.ref.read(authProvider).valueOrNull;
       if (user == null) return;
       final account = AccountModel(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
         userId: user.id,
         name: name,
         balance: balance,
         type: _selectedType,
-        createdAt: DateTime.now(),
       );
       widget.ref.read(accountsProvider.notifier).add(account);
     }

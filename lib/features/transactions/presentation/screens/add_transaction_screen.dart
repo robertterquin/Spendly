@@ -91,7 +91,6 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     if (user == null) return;
 
     final transaction = TransactionModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
       userId: user.id,
       type: _isIncome ? 'income' : 'expense',
       amount: amount,
@@ -101,7 +100,6 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       notes: _notesController.text.trim().isNotEmpty
           ? _notesController.text.trim()
           : null,
-      createdAt: DateTime.now(),
     );
 
     await ref.read(transactionsProvider.notifier).add(transaction);
