@@ -70,7 +70,7 @@ class AccountsSection extends ConsumerWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'Total: \$${totalBalance.toStringAsFixed(2)}',
+          'Total: ₱${totalBalance.toStringAsFixed(2)}',
           style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
@@ -228,7 +228,7 @@ class _AccountTile extends ConsumerWidget {
             ),
           ),
           Text(
-            '\$${account.balance.toStringAsFixed(2)}',
+            '₱${account.balance.toStringAsFixed(2)}',
             style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w700,
@@ -339,7 +339,7 @@ class _AccountTile extends ConsumerWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'Current balance: \$${account.balance.toStringAsFixed(2)}',
+              'Current balance: ₱${account.balance.toStringAsFixed(2)}',
               style: TextStyle(
                 fontSize: 12,
                 color: AppColors.textSecondary,
@@ -357,7 +357,7 @@ class _AccountTile extends ConsumerWidget {
                 color: AppColors.textPrimary,
               ),
               decoration: InputDecoration(
-                prefixText: '\$ ',
+                prefixText: '₱ ',
                 prefixStyle: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -660,7 +660,7 @@ class _AddAccountSheetState extends State<_AddAccountSheet> {
               color: AppColors.textPrimary,
             ),
             decoration: InputDecoration(
-              prefixText: '\$ ',
+              prefixText: '₱ ',
               prefixStyle: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,

@@ -362,7 +362,7 @@ class _CategoryBar extends StatelessWidget {
               ),
             ),
             Text(
-              '\$${category.amount.toStringAsFixed(2)}',
+              '₱${category.amount.toStringAsFixed(2)}',
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,

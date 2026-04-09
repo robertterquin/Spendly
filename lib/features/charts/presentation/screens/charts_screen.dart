@@ -325,7 +325,7 @@ class _ChartsScreenState extends ConsumerState<ChartsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '\$${d.amount.toStringAsFixed(2)}',
+                        '₱${d.amount.toStringAsFixed(2)}',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
@@ -463,7 +463,7 @@ class _SummaryCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            '\$${amount.toStringAsFixed(2)}',
+            '₱${amount.toStringAsFixed(2)}',
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,

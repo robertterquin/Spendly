@@ -7,6 +7,7 @@ class TransactionModel {
     required this.category,
     required this.date,
     required this.createdAt,
+    this.accountId,
     this.notes,
   });
 
@@ -16,6 +17,7 @@ class TransactionModel {
   final double amount;
   final String category;
   final DateTime date;
+  final String? accountId;
   final String? notes;
   final DateTime createdAt;
 
@@ -26,6 +28,7 @@ class TransactionModel {
         'amount': amount,
         'category': category,
         'date': date.toIso8601String(),
+        'accountId': accountId,
         'notes': notes,
         'createdAt': createdAt.toIso8601String(),
       };
@@ -38,6 +41,7 @@ class TransactionModel {
         amount: (json['amount'] as num).toDouble(),
         category: json['category'] as String,
         date: DateTime.parse(json['date'] as String),
+        accountId: json['accountId'] as String?,
         notes: json['notes'] as String?,
         createdAt: DateTime.parse(json['createdAt'] as String),
       );

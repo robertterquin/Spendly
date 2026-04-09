@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spendly/features/accounts/presentation/providers/accounts_provider.dart';
 import 'package:spendly/features/auth/presentation/providers/auth_provider.dart';
 import 'package:spendly/features/transactions/domain/transaction_model.dart';
 import 'package:spendly/features/transactions/presentation/providers/transactions_provider.dart';
@@ -27,6 +28,7 @@ class AddTransactionScreen extends ConsumerStatefulWidget {
 class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   bool _isIncome = true;
   String? _selectedCategory;
+  String? _selectedAccountId;
   DateTime _selectedDate = DateTime.now();
   final _amountController = TextEditingController();
   final _notesController = TextEditingController();
@@ -95,6 +97,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       amount: amount,
       category: _selectedCategory!,
       date: _selectedDate,
+      accountId: _selectedAccountId,
       notes: _notesController.text.trim().isNotEmpty
           ? _notesController.text.trim()
           : null,
@@ -112,6 +115,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       _notesController.clear();
       setState(() {
         _selectedCategory = null;
+        _selectedAccountId = null;
         _selectedDate = DateTime.now();
         _isSaving = false;
       });
@@ -229,7 +233,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     color: AppColors.textPrimary,
                   ),
                   decoration: InputDecoration(
-                    prefixText: '\$ ',
+                    prefixText: '₱ ',
                     prefixStyle: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
@@ -290,7 +294,15 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 }).toList(),
               ),
               const SizedBox(height: 24),
-
+              // Account
+              _SectionLabel(label: 'ACCOUNT (OPTIONAL)'),
+              const SizedBox(height: 8),
+              _AccountSelector(
+                selectedAccountId: _selectedAccountId,
+                onChanged: (id) =>
+                    setState(() => _selectedAccountId = id),
+              ),
+              const SizedBox(height: 24),
               // Date
               _SectionLabel(label: 'DATE'),
               const SizedBox(height: 8),
@@ -446,6 +458,137 @@ class _TypeTab extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _AccountSelector extends ConsumerWidget {
+  const _AccountSelector({
+    required this.selectedAccountId,
+    required this.onChanged,
+  });
+
+  final String? selectedAccountId;
+  final ValueChanged<String?> onChanged;
+
+  static const _typeIcons = <String, IconData>{
+    'bank': Icons.account_balance_rounded,
+    'digital': Icons.phone_android_rounded,
+    'cash': Icons.wallet_rounded,
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final accountsState = ref.watch(accountsProvider);
+    return accountsState.when(
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+      data: (accounts) {
+        if (accounts.isEmpty) {
+          return Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Text(
+              'No accounts added yet',
+              style: TextStyle(
+                fontSize: 13,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          );
+        }
+
+        return Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            // "None" option
+            GestureDetector(
+              onTap: () => onChanged(null),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: selectedAccountId == null
+                      ? AppColors.primary.withValues(alpha: 0.12)
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: selectedAccountId == null
+                        ? AppColors.primary
+                        : AppColors.border,
+                    width: selectedAccountId == null ? 1.5 : 1,
+                  ),
+                ),
+                child: Text(
+                  'None',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: selectedAccountId == null
+                        ? FontWeight.w600
+                        : FontWeight.w500,
+                    color: selectedAccountId == null
+                        ? AppColors.primary
+                        : AppColors.textSecondary,
+                  ),
+                ),
+              ),
+            ),
+            ...accounts.map((account) {
+              final isSelected = selectedAccountId == account.id;
+              final icon = _typeIcons[account.type] ??
+                  Icons.account_balance_rounded;
+              return GestureDetector(
+                onTap: () => onChanged(account.id),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? AppColors.primary.withValues(alpha: 0.12)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isSelected
+                          ? AppColors.primary
+                          : AppColors.border,
+                      width: isSelected ? 1.5 : 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(icon, size: 16,
+                          color: isSelected
+                              ? AppColors.primary
+                              : AppColors.textSecondary),
+                      const SizedBox(width: 6),
+                      Text(
+                        account.name,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w500,
+                          color: isSelected
+                              ? AppColors.primary
+                              : AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ],
+        );
+      },
     );
   }
 }

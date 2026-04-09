@@ -390,7 +390,7 @@ class _TransactionCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '$sign\$${transaction.amount.toStringAsFixed(2)}',
+                  '$sign₱${transaction.amount.toStringAsFixed(2)}',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,

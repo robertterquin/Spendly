@@ -78,7 +78,7 @@ class BalanceCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            '\$${totalBalance.toStringAsFixed(2)}',
+            '₱${totalBalance.toStringAsFixed(2)}',
             style: const TextStyle(
               color: AppColors.textPrimary,
               fontSize: 34,
@@ -165,7 +165,7 @@ class _StatBox extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '\$${amount.toStringAsFixed(2)}',
+                  '₱${amount.toStringAsFixed(2)}',
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,

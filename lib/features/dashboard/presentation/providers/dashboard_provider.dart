@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spendly/features/accounts/presentation/providers/accounts_provider.dart';
 import 'package:spendly/features/transactions/domain/transaction_model.dart';
 import 'package:spendly/features/transactions/presentation/providers/transactions_provider.dart';
 
@@ -32,6 +33,7 @@ class DashboardSummary {
 
 final dashboardSummaryProvider = Provider<AsyncValue<DashboardSummary>>((ref) {
   final txState = ref.watch(transactionsProvider);
+  final totalAccountsBalance = ref.watch(totalAccountsBalanceProvider);
   return txState.when(
     data: (transactions) {
       final now = DateTime.now();
@@ -58,7 +60,7 @@ final dashboardSummaryProvider = Provider<AsyncValue<DashboardSummary>>((ref) {
           )).toList();
 
       return AsyncData(DashboardSummary(
-        totalBalance: totalIncome - totalExpense,
+        totalBalance: totalAccountsBalance,
         totalIncome: totalIncome,
         totalExpense: totalExpense,
         recentTransactions: transactions.take(5).toList(),
