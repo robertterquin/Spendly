@@ -343,6 +343,18 @@ class ChatbotNotifier extends Notifier<ChatState> {
         );
         await ref.read(transactionsProvider.notifier).add(expense);
         await ref.read(transactionsProvider.notifier).add(income);
+      case 'edit_account':
+        final accountId = data['account_id'] as String?;
+        final newBalance = data['balance'] != null
+            ? (data['balance'] as num).toDouble()
+            : null;
+        if (accountId == null || accountId.isEmpty || newBalance == null) return;
+        final accounts = await ref.read(accountsProvider.future);
+        final existing = accounts.where((a) => a.id == accountId).firstOrNull;
+        if (existing == null) return;
+        await ref
+            .read(accountsProvider.notifier)
+            .updateAccount(existing.copyWith(balance: newBalance));
     }
   }
 }

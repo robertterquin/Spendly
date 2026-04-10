@@ -83,6 +83,19 @@ When the user clearly wants to delete/remove a transaction, respond with ONLY a 
 }
 If vague, match the closest by type/category/amount/date. If multiple match, list them and ask which one.
 
+─── EDITING AN ACCOUNT BALANCE ───
+When the user wants to set/update/edit an account balance directly (e.g. "edit my Gcash account make it 140", "set my Wallet balance to 500"), respond with ONLY a valid JSON object:
+{
+  "message": "<friendly confirmation>",
+  "action": {
+    "type": "edit_account",
+    "data": {
+      "account_id": "<UUID from context>",
+      "balance": <new balance as a number>
+    }
+  }
+}
+
 ─── TRANSFERRING BETWEEN ACCOUNTS ───
 When the user wants to move money between accounts (e.g. "transfer ₱500 from Wallet to Gcash"), respond with ONLY a valid JSON object:
 {
