@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:spendly/features/chatbot/presentation/screens/chatbot_screen.dart';
 import 'package:spendly/features/charts/presentation/screens/charts_screen.dart';
 import 'package:spendly/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:spendly/features/profile/presentation/screens/profile_screen.dart';
 import 'package:spendly/features/transactions/presentation/screens/add_transaction_screen.dart';
-import 'package:spendly/features/transactions/presentation/screens/transaction_history_screen.dart';
 import 'package:spendly/shared/theme/app_theme.dart';
 
 class AppNavigationShell extends StatefulWidget {
@@ -19,8 +19,8 @@ class _AppNavigationShellState extends State<AppNavigationShell> {
   final _screens = const [
     DashboardScreen(),
     AddTransactionScreen(),
-    TransactionHistoryScreen(),
     ChartsScreen(),
+    ChatbotScreen(),
     ProfileScreen(),
   ];
 
@@ -73,14 +73,14 @@ class _AppNavigationShellState extends State<AppNavigationShell> {
                     onTap: () => setState(() => _currentIndex = 1),
                   ),
                   _NavItem(
-                    assetPath: 'assets/icons/history.png',
-                    label: 'History',
+                    assetPath: 'assets/icons/line-chart.png',
+                    label: 'Charts',
                     isActive: _currentIndex == 2,
                     onTap: () => setState(() => _currentIndex = 2),
                   ),
                   _NavItem(
-                    assetPath: 'assets/icons/line-chart.png',
-                    label: 'Charts',
+                    icon: Icons.smart_toy_outlined,
+                    label: 'AI',
                     isActive: _currentIndex == 3,
                     onTap: () => setState(() => _currentIndex = 3),
                   ),
