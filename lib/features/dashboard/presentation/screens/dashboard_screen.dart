@@ -172,9 +172,9 @@ class _HeroSection extends StatelessWidget {
 
   String get _greeting {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return 'Good morning \u2600\uFE0F';
+    if (hour < 17) return 'Good afternoon \u{1F44B}';
+    return 'Good evening \u{1F319}';
   }
 
   @override
@@ -339,6 +339,17 @@ class _CategoryBar extends StatelessWidget {
     'Others': Color(0xFF6B7280),
   };
 
+  static IconData _categoryIcon(String category) {
+    switch (category) {
+      case 'Food': return Icons.restaurant_rounded;
+      case 'Transport': return Icons.directions_car_rounded;
+      case 'School': return Icons.school_rounded;
+      case 'Bills': return Icons.receipt_rounded;
+      case 'Entertainment': return Icons.movie_rounded;
+      default: return Icons.more_horiz_rounded;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final color = _categoryColors[category.category] ?? AppColors.tertiary;
@@ -347,14 +358,15 @@ class _CategoryBar extends StatelessWidget {
         Row(
           children: [
             Container(
-              width: 8,
-              height: 8,
+              width: 32,
+              height: 32,
               decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
               ),
+              child: Icon(_categoryIcon(category.category), size: 16, color: color),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 category.category,

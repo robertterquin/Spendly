@@ -132,18 +132,22 @@ class AccountsSection extends ConsumerWidget {
               );
             }
 
-            return Column(
-              children: [
-                for (int i = 0; i < accounts.length; i++) ...[
-                  if (i > 0) const SizedBox(height: 10),
-                  _AccountTile(
-                    account: accounts[i],
-                    icon: _typeIcons[accounts[i].type] ??
+            return SizedBox(
+              height: 120,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: accounts.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                itemBuilder: (context, index) {
+                  final account = accounts[index];
+                  return _AccountCard(
+                    account: account,
+                    icon: _typeIcons[account.type] ??
                         Icons.account_balance_rounded,
-                    color: _typeColors[accounts[i].type] ?? AppColors.primary,
-                  ),
-                ],
-              ],
+                    color: _typeColors[account.type] ?? AppColors.primary,
+                  );
+                },
+              ),
             );
           },
         ),
@@ -161,8 +165,8 @@ class AccountsSection extends ConsumerWidget {
   }
 }
 
-class _AccountTile extends ConsumerWidget {
-  const _AccountTile({
+class _AccountCard extends ConsumerWidget {
+  const _AccountCard({
     required this.account,
     required this.icon,
     required this.color,
@@ -174,138 +178,222 @@ class _AccountTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
+    return GestureDetector(
+      onLongPress: () => _showActions(context, ref),
+      child: Container(
+        width: 160,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 14,
+              offset: const Offset(0, 4),
             ),
-            child: Icon(icon, size: 20, color: color),
+          ],
+          border: Border.all(
+            color: color.withValues(alpha: 0.1),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Text(
-                  account.name,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        color.withValues(alpha: 0.15),
+                        color.withValues(alpha: 0.05),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
                   ),
+                  child: Icon(icon, size: 18, color: color),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  account.type == 'digital'
-                      ? 'Digital Wallet'
-                      : account.type == 'cash'
-                          ? 'Cash'
-                          : 'Bank',
-                  style: TextStyle(
-                    fontSize: 11,
+                const Spacer(),
+                PopupMenuButton<String>(
+                  padding: EdgeInsets.zero,
+                  iconSize: 18,
+                  icon: Icon(
+                    Icons.more_horiz_rounded,
                     color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w500,
+                    size: 18,
                   ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  onSelected: (value) {
+                    switch (value) {
+                      case 'add':
+                        _showAdjustDialog(context, ref, isAdding: true);
+                      case 'withdraw':
+                        _showAdjustDialog(context, ref, isAdding: false);
+                      case 'edit':
+                        _showEditSheet(context, ref);
+                      case 'delete':
+                        _confirmDelete(context, ref);
+                    }
+                  },
+                  itemBuilder: (_) => [
+                    const PopupMenuItem(
+                      value: 'add',
+                      child: Row(
+                        children: [
+                          Icon(Icons.add_rounded, size: 18, color: AppColors.secondary),
+                          SizedBox(width: 8),
+                          Text('Add Money', style: TextStyle(fontSize: 13)),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'withdraw',
+                      child: Row(
+                        children: [
+                          Icon(Icons.remove_rounded, size: 18, color: AppColors.expense),
+                          SizedBox(width: 8),
+                          Text('Withdraw', style: TextStyle(fontSize: 13)),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit_outlined, size: 18, color: AppColors.tertiary),
+                          SizedBox(width: 8),
+                          Text('Edit', style: TextStyle(fontSize: 13)),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete_outline_rounded,
+                              size: 18, color: AppColors.expense),
+                          SizedBox(width: 8),
+                          Text('Delete',
+                              style:
+                                  TextStyle(fontSize: 13, color: AppColors.expense)),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ),
-          Text(
-            '₱${account.balance.toStringAsFixed(2)}',
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+            const Spacer(),
+            Text(
+              account.name,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-          const SizedBox(width: 8),
-          PopupMenuButton<String>(
-            padding: EdgeInsets.zero,
-            iconSize: 20,
-            icon: Icon(
-              Icons.more_vert_rounded,
-              color: AppColors.textSecondary,
-              size: 18,
+            const SizedBox(height: 2),
+            Text(
+              '₱${account.balance.toStringAsFixed(2)}',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: color,
+                letterSpacing: -0.3,
+              ),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            onSelected: (value) {
-              switch (value) {
-                case 'add':
-                  _showAdjustDialog(context, ref, isAdding: true);
-                case 'withdraw':
-                  _showAdjustDialog(context, ref, isAdding: false);
-                case 'edit':
-                  _showEditSheet(context, ref);
-                case 'delete':
-                  _confirmDelete(context, ref);
-              }
-            },
-            itemBuilder: (_) => [
-              const PopupMenuItem(
-                value: 'add',
-                child: Row(
-                  children: [
-                    Icon(Icons.add_rounded, size: 18, color: AppColors.secondary),
-                    SizedBox(width: 8),
-                    Text('Add Money', style: TextStyle(fontSize: 13)),
-                  ],
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'withdraw',
-                child: Row(
-                  children: [
-                    Icon(Icons.remove_rounded, size: 18, color: AppColors.expense),
-                    SizedBox(width: 8),
-                    Text('Withdraw', style: TextStyle(fontSize: 13)),
-                  ],
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'edit',
-                child: Row(
-                  children: [
-                    Icon(Icons.edit_outlined, size: 18, color: AppColors.tertiary),
-                    SizedBox(width: 8),
-                    Text('Edit', style: TextStyle(fontSize: 13)),
-                  ],
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'delete',
-                child: Row(
-                  children: [
-                    Icon(Icons.delete_outline_rounded,
-                        size: 18, color: AppColors.expense),
-                    SizedBox(width: 8),
-                    Text('Delete',
-                        style:
-                            TextStyle(fontSize: 13, color: AppColors.expense)),
-                  ],
-                ),
-              ),
-            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showActions(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
           ),
-        ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              account.name,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _ActionButton(
+                  icon: Icons.add_rounded,
+                  label: 'Add',
+                  color: AppColors.secondary,
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _showAdjustDialog(context, ref, isAdding: true);
+                  },
+                ),
+                _ActionButton(
+                  icon: Icons.remove_rounded,
+                  label: 'Withdraw',
+                  color: AppColors.expense,
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _showAdjustDialog(context, ref, isAdding: false);
+                  },
+                ),
+                _ActionButton(
+                  icon: Icons.edit_outlined,
+                  label: 'Edit',
+                  color: AppColors.tertiary,
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _showEditSheet(context, ref);
+                  },
+                ),
+                _ActionButton(
+                  icon: Icons.delete_outline_rounded,
+                  label: 'Delete',
+                  color: AppColors.expense,
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _confirmDelete(context, ref);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -747,4 +835,48 @@ class _AccountTypeInfo {
   final String label;
   final IconData icon;
   final Color color;
+}
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(icon, size: 22, color: color),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
