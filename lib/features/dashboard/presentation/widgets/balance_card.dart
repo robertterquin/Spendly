@@ -87,28 +87,35 @@ class BalanceCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                child: _StatBox(
-                  icon: Icons.arrow_downward_rounded,
-                  iconColor: AppColors.income,
-                  bgColor: AppColors.income.withValues(alpha: 0.08),
-                  label: 'Income',
-                  amount: totalIncome,
+          Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: AppColors.background,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _StatBox(
+                    icon: Icons.arrow_downward_rounded,
+                    iconColor: AppColors.income,
+                    bgColor: AppColors.income.withValues(alpha: 0.08),
+                    label: 'Income',
+                    amount: totalIncome,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _StatBox(
-                  icon: Icons.arrow_upward_rounded,
-                  iconColor: AppColors.expense,
-                  bgColor: AppColors.expense.withValues(alpha: 0.08),
-                  label: 'Expense',
-                  amount: totalExpense,
+                const SizedBox(width: 2),
+                Expanded(
+                  child: _StatBox(
+                    icon: Icons.arrow_upward_rounded,
+                    iconColor: AppColors.expense,
+                    bgColor: AppColors.expense.withValues(alpha: 0.08),
+                    label: 'Expense',
+                    amount: totalExpense,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

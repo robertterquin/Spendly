@@ -17,6 +17,19 @@ const _expenseCategories = [
   'Others',
 ];
 
+const _categoryIcons = <String, IconData>{
+  'Allowance': Icons.wallet_rounded,
+  'Salary': Icons.work_rounded,
+  'Gift': Icons.card_giftcard_rounded,
+  'Side Hustle': Icons.trending_up_rounded,
+  'Food': Icons.restaurant_rounded,
+  'Transport': Icons.directions_car_rounded,
+  'School': Icons.school_rounded,
+  'Bills': Icons.receipt_rounded,
+  'Entertainment': Icons.movie_rounded,
+  'Others': Icons.more_horiz_rounded,
+};
+
 class AddTransactionScreen extends ConsumerStatefulWidget {
   const AddTransactionScreen({super.key});
 
@@ -260,6 +273,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   final isSelected = _selectedCategory == cat;
                   final color =
                       _isIncome ? AppColors.income : AppColors.expense;
+                  final icon = _categoryIcons[cat] ?? Icons.category_rounded;
                   return GestureDetector(
                     onTap: () => setState(() => _selectedCategory = cat),
                     child: AnimatedContainer(
@@ -278,14 +292,25 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                           width: isSelected ? 1.5 : 1,
                         ),
                       ),
-                      child: Text(
-                        cat,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.w500,
-                          color: isSelected ? color : AppColors.textSecondary,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            icon,
+                            size: 16,
+                            color: isSelected ? color : AppColors.textSecondary,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            cat,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight:
+                                  isSelected ? FontWeight.w600 : FontWeight.w500,
+                              color: isSelected ? color : AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );

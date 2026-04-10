@@ -190,20 +190,58 @@ class _ChartsScreenState extends ConsumerState<ChartsScreen> {
       );
     }
 
+    final total = data.fold<double>(0, (sum, d) => sum + d.amount);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         children: [
           SizedBox(
-            width: 180,
-            height: 180,
-            child: CustomPaint(
-              painter: _PieChartPainter(data: data),
+            width: 200,
+            height: 200,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                CustomPaint(
+                  size: const Size(200, 200),
+                  painter: _PieChartPainter(data: data),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      _showExpenses ? 'Spent' : 'Earned',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '₱${total.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textPrimary,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 20),
@@ -244,6 +282,21 @@ class _ChartsScreenState extends ConsumerState<ChartsScreen> {
     );
   }
 
+  static IconData _categoryIcon(String category) {
+    switch (category) {
+      case 'Food': return Icons.restaurant_rounded;
+      case 'Transport': return Icons.directions_car_rounded;
+      case 'School': return Icons.school_rounded;
+      case 'Bills': return Icons.receipt_rounded;
+      case 'Entertainment': return Icons.movie_rounded;
+      case 'Salary': return Icons.work_rounded;
+      case 'Allowance': return Icons.wallet_rounded;
+      case 'Gift': return Icons.card_giftcard_rounded;
+      case 'Side Hustle': return Icons.trending_up_rounded;
+      default: return Icons.more_horiz_rounded;
+    }
+  }
+
   Widget _buildBreakdown(List<ChartCategoryData> data) {
     if (data.isEmpty) return const SizedBox.shrink();
 
@@ -271,25 +324,27 @@ class _ChartsScreenState extends ConsumerState<ChartsScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
                   Container(
-                    width: 36,
-                    height: 36,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(10),
+                      color: color.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Center(
-                      child: Container(
-                        width: 12,
-                        height: 12,
-                        decoration: BoxDecoration(
-                          color: color,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
+                    child: Icon(
+                      _categoryIcon(d.category),
+                      size: 20,
+                      color: color,
                     ),
                   ),
                   const SizedBox(width: 14),
@@ -435,6 +490,16 @@ class _SummaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 3),
+          ),
+        ],
+        border: Border.all(
+          color: color.withValues(alpha: 0.12),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -442,32 +507,44 @@ class _SummaryCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 32,
-                height: 32,
+                width: 36,
+                height: 36,
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(9),
+                  gradient: LinearGradient(
+                    colors: [color.withValues(alpha: 0.15), color.withValues(alpha: 0.05)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, size: 16, color: color),
+                child: Icon(icon, size: 18, color: color),
               ),
               const Spacer(),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.textSecondary,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: color,
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           Text(
             '₱${amount.toStringAsFixed(2)}',
             style: const TextStyle(
               fontSize: 20,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w800,
               color: AppColors.textPrimary,
+              letterSpacing: -0.5,
             ),
           ),
         ],
