@@ -10,168 +10,161 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).valueOrNull;
+    final initial = (user?.name.isNotEmpty == true)
+        ? user!.name[0].toUpperCase()
+        : '?';
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
-              const Text(
-                'Profile',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // ── Hero header ──────────────────────────────────
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.primary, Color(0xFF2A4A7F)],
                 ),
               ),
-              const SizedBox(height: 24),
-              // Avatar + name
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Center(
-                        child: Text(
-                          (user?.name.isNotEmpty == true)
-                              ? user!.name[0].toUpperCase()
-                              : '?',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 28, 20, 36),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.18),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.4),
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            initial,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 32,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      const SizedBox(height: 14),
+                      Text(
+                        user?.name ?? '',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        user?.email ?? '',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.72),
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // ── Settings sections ────────────────────────────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const _SectionLabel('ACCOUNT'),
+                  const SizedBox(height: 10),
+                  _MenuCard(
+                    items: const [
+                      _MenuItemData(
+                        icon: Icons.person_outline_rounded,
+                        iconColor: AppColors.tertiary,
+                        label: 'Edit Profile',
+                      ),
+                      _MenuItemData(
+                        icon: Icons.lock_outline_rounded,
+                        iconColor: AppColors.secondary,
+                        label: 'Change Password',
+                      ),
+                      _MenuItemData(
+                        icon: Icons.notifications_none_rounded,
+                        iconColor: Color(0xFFF59E0B),
+                        label: 'Notifications',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  const _SectionLabel('MORE'),
+                  const SizedBox(height: 10),
+                  _MenuCard(
+                    items: const [
+                      _MenuItemData(
+                        icon: Icons.help_outline_rounded,
+                        iconColor: AppColors.primary,
+                        label: 'Help & Support',
+                      ),
+                      _MenuItemData(
+                        icon: Icons.info_outline_rounded,
+                        iconColor: AppColors.textSecondary,
+                        label: 'About',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 28),
+
+                  // ── Logout button ──────────────────────────
+                  GestureDetector(
+                    onTap: () => _confirmLogout(context, ref),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      decoration: BoxDecoration(
+                        color: AppColors.error.withValues(alpha: 0.06),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: AppColors.error.withValues(alpha: 0.25),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            user?.name ?? '',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
-                            ),
+                          Icon(
+                            Icons.logout_rounded,
+                            size: 18,
+                            color: AppColors.error,
                           ),
-                          const SizedBox(height: 3),
+                          SizedBox(width: 8),
                           Text(
-                            user?.email ?? '',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: AppColors.textSecondary,
+                            'Log Out',
+                            style: TextStyle(
+                              color: AppColors.error,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 120),
+                ],
               ),
-              const SizedBox(height: 32),
-              const Text(
-                'ACCOUNT',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textSecondary,
-                  letterSpacing: 1.2,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  children: [
-                    _MenuItem(
-                      icon: Icons.person_outline_rounded,
-                      label: 'Edit Profile',
-                      onTap: () {},
-                    ),
-                    const _Divider(),
-                    _MenuItem(
-                      icon: Icons.lock_outline_rounded,
-                      label: 'Change Password',
-                      onTap: () {},
-                    ),
-                    const _Divider(),
-                    _MenuItem(
-                      icon: Icons.notifications_none_rounded,
-                      label: 'Notifications',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'MORE',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textSecondary,
-                  letterSpacing: 1.2,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  children: [
-                    _MenuItem(
-                      icon: Icons.help_outline_rounded,
-                      label: 'Help & Support',
-                      onTap: () {},
-                    ),
-                    const _Divider(),
-                    _MenuItem(
-                      icon: Icons.info_outline_rounded,
-                      label: 'About',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: _MenuItem(
-                  icon: Icons.logout_rounded,
-                  label: 'Log Out',
-                  color: AppColors.error,
-                  onTap: () => _confirmLogout(context, ref),
-                ),
-              ),
-              const SizedBox(height: 120),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -227,62 +220,111 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-class _MenuItem extends StatelessWidget {
-  const _MenuItem({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.color,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  final Color? color;
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.text);
+  final String text;
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColor = color ?? AppColors.textPrimary;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-        child: Row(
-          children: [
-            Icon(icon, size: 20, color: effectiveColor),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: effectiveColor,
-                ),
-              ),
-            ),
-            if (color == null)
-              const Icon(
-                Icons.chevron_right_rounded,
-                size: 20,
-                color: AppColors.textSecondary,
-              ),
-          ],
-        ),
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+        color: AppColors.textSecondary,
+        letterSpacing: 1.2,
       ),
     );
   }
 }
 
-class _Divider extends StatelessWidget {
-  const _Divider();
+class _MenuItemData {
+  const _MenuItemData({
+    required this.icon,
+    required this.iconColor,
+    required this.label,
+  });
+
+  final IconData icon;
+  final Color iconColor;
+  final String label;
+}
+
+class _MenuCard extends StatelessWidget {
+  const _MenuCard({required this.items});
+  final List<_MenuItemData> items;
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 50),
-      child: Divider(height: 1, color: AppColors.border),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          for (int i = 0; i < items.length; i++) ...[
+            _MenuRow(data: items[i]),
+            if (i < items.length - 1)
+              const Padding(
+                padding: EdgeInsets.only(left: 56),
+                child: Divider(height: 1, color: AppColors.border),
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _MenuRow extends StatelessWidget {
+  const _MenuRow({required this.data});
+  final _MenuItemData data;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(16),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: data.iconColor.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(data.icon, size: 18, color: data.iconColor),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                data.label,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
+            const Icon(
+              Icons.chevron_right_rounded,
+              size: 20,
+              color: AppColors.textSecondary,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
