@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spendly/features/accounts/presentation/providers/accounts_provider.dart';
 import 'package:spendly/features/auth/presentation/providers/auth_provider.dart';
 import 'package:spendly/features/chatbot/data/ai_service.dart';
 import 'package:spendly/features/chatbot/domain/chat_message_model.dart';
@@ -104,17 +105,28 @@ class ChatbotNotifier extends Notifier<ChatState> {
         .where((t) => t.isExpense)
         .fold(0.0, (sum, t) => sum + t.amount);
 
+    final accounts = ref.read(accountsProvider).valueOrNull ?? [];
+
     final buffer = StringBuffer()
       ..writeln('Today: ${now.toIso8601String().split('T').first}')
       ..writeln('Current month: ${now.month}/${now.year}')
       ..writeln('Total income this month: $totalIncome')
       ..writeln('Total expenses this month: $totalExpense')
       ..writeln('Net: ${totalIncome - totalExpense}')
+      ..writeln('')
+      ..writeln('User accounts:');
+
+    for (final a in accounts) {
+      buffer.writeln('- ${a.name} (${a.type}) | balance: ${a.balance} | id: ${a.id}');
+    }
+
+    buffer
+      ..writeln('')
       ..writeln('Recent transactions (last 10):');
 
     for (final t in transactions.take(10)) {
       buffer.writeln(
-        '- ${t.type}: ${t.amount} | ${t.category} | '
+        '- id: ${t.id} | ${t.type}: ${t.amount} | ${t.category} | '
         '${t.date.toIso8601String().split('T').first} | ${t.notes ?? ''}',
       );
     }
@@ -138,9 +150,15 @@ class ChatbotNotifier extends Notifier<ChatState> {
           amount: (data['amount'] as num).toDouble(),
           category: data['category'] as String,
           date: DateTime.now(),
+          accountId: data['account_id'] as String?,
           notes: data['notes'] as String?,
         );
         await ref.read(transactionsProvider.notifier).add(transaction);
+      case 'delete_transaction':
+        final transactionId = data['transaction_id'] as String?;
+        if (transactionId != null && transactionId.isNotEmpty) {
+          await ref.read(transactionsProvider.notifier).delete(transactionId);
+        }
     }
   }
 }

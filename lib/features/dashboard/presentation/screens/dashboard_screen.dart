@@ -5,6 +5,7 @@ import 'package:spendly/features/auth/presentation/providers/auth_provider.dart'
 import 'package:spendly/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:spendly/features/dashboard/presentation/widgets/balance_card.dart';
 import 'package:spendly/features/dashboard/presentation/widgets/recent_transactions_list.dart';
+import 'package:spendly/features/transactions/presentation/providers/transactions_provider.dart';
 import 'package:spendly/shared/theme/app_theme.dart';
 
 class DashboardScreen extends ConsumerWidget {
@@ -148,6 +149,9 @@ class DashboardScreen extends ConsumerWidget {
                     const SizedBox(height: 14),
                     RecentTransactionsList(
                       transactions: summary.recentTransactions,
+                      onDelete: (tx) => ref
+                          .read(transactionsProvider.notifier)
+                          .delete(tx.id),
                     ),
                   ],
                 ),
