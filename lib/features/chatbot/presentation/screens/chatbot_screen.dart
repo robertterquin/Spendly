@@ -117,44 +117,204 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
                 ),
               ),
               const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'AI Budget Assistant',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'AI Budget Assistant',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: 7,
-                        height: 7,
-                        decoration: const BoxDecoration(
-                          color: AppColors.secondary,
-                          shape: BoxShape.circle,
+                    Row(
+                      children: [
+                        Container(
+                          width: 7,
+                          height: 7,
+                          decoration: const BoxDecoration(
+                            color: AppColors.secondary,
+                            shape: BoxShape.circle,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        'Powered by Gemini',
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.75),
-                          fontSize: 12,
+                        const SizedBox(width: 5),
+                        Text(
+                          'Powered by Groq',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.75),
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () => _showChatHistory(context),
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                ],
+                  child: const Icon(
+                    Icons.history_rounded,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: () => ref.read(chatbotProvider.notifier).startNewChat(),
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.add_rounded,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _showChatHistory(BuildContext context) {
+    final chatState = ref.read(chatbotProvider);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) => Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.6,
+        ),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(top: 12),
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'Chat History',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
+            const Divider(height: 1),
+            if (chatState.sessions.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(32),
+                child: Text(
+                  'No conversations yet',
+                  style: TextStyle(color: AppColors.textSecondary),
+                ),
+              )
+            else
+              Flexible(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  itemCount: chatState.sessions.length,
+                  separatorBuilder: (_, __) => const Divider(height: 1, indent: 56),
+                  itemBuilder: (_, index) {
+                    final session = chatState.sessions[index];
+                    final isActive = session.id == chatState.currentSession?.id;
+                    return ListTile(
+                      leading: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: isActive
+                              ? AppColors.primary.withValues(alpha: 0.1)
+                              : AppColors.background,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          Icons.chat_bubble_outline_rounded,
+                          size: 16,
+                          color: isActive
+                              ? AppColors.primary
+                              : AppColors.textSecondary,
+                        ),
+                      ),
+                      title: Text(
+                        session.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      subtitle: session.createdAt != null
+                          ? Text(
+                              _formatDate(session.createdAt!),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.textSecondary,
+                              ),
+                            )
+                          : null,
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete_outline, size: 18),
+                        color: AppColors.textSecondary,
+                        onPressed: () {
+                          Navigator.pop(ctx);
+                          ref.read(chatbotProvider.notifier).deleteSession(session.id);
+                        },
+                      ),
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        ref.read(chatbotProvider.notifier).selectSession(session);
+                      },
+                    );
+                  },
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final d = DateTime(date.year, date.month, date.day);
+    final diff = today.difference(d).inDays;
+    if (diff == 0) return 'Today';
+    if (diff == 1) return 'Yesterday';
+    return '${date.day}/${date.month}/${date.year}';
   }
 
   Widget _buildEmptyState() {
