@@ -6,9 +6,11 @@ class RecentTransactionsList extends StatelessWidget {
   const RecentTransactionsList({
     super.key,
     required this.transactions,
+    this.onDelete,
   });
 
   final List<TransactionModel> transactions;
+  final void Function(TransactionModel)? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +68,13 @@ class RecentTransactionsList extends StatelessWidget {
 
     return Column(
       children: List.generate(transactions.length, (index) {
+        final tx = transactions[index];
         return Padding(
           padding: EdgeInsets.only(bottom: index < transactions.length - 1 ? 10 : 0),
-          child: _TransactionTile(transaction: transactions[index]),
+          child: _TransactionTile(
+            transaction: tx,
+            onDelete: onDelete != null ? () => onDelete!(tx) : null,
+          ),
         );
       }),
     );
@@ -76,9 +82,10 @@ class RecentTransactionsList extends StatelessWidget {
 }
 
 class _TransactionTile extends StatelessWidget {
-  const _TransactionTile({required this.transaction});
+  const _TransactionTile({required this.transaction, this.onDelete});
 
   final TransactionModel transaction;
+  final VoidCallback? onDelete;
 
   String get _dateLabel {
     final now = DateTime.now();
@@ -122,7 +129,7 @@ class _TransactionTile extends StatelessWidget {
     final color = isIncome ? AppColors.income : AppColors.expense;
     final sign = isIncome ? '+' : '-';
 
-    return Container(
+    final tile = Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -198,6 +205,24 @@ class _TransactionTile extends StatelessWidget {
           ),
         ],
       ),
+    );
+
+    if (onDelete == null) return tile;
+
+    return Dismissible(
+      key: ValueKey(transaction.id),
+      direction: DismissDirection.endToStart,
+      onDismissed: (_) => onDelete!(),
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        decoration: BoxDecoration(
+          color: AppColors.expense,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: const Icon(Icons.delete_outline, color: Colors.white, size: 24),
+      ),
+      child: tile,
     );
   }
 }

@@ -35,7 +35,7 @@ dependencies:
   flutter_riverpod: ^2.6.1
   shared_preferences: ^2.3.4
   supabase_flutter: ^2.8.4
-  google_generative_ai: ^0.4.7
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:
