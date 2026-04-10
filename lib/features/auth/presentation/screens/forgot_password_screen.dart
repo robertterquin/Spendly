@@ -80,12 +80,6 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     ),
                   ),
                   const Spacer(),
-                  Image.asset(
-                    'assets/images/spendly_logo.png',
-                    width: 32,
-                    height: 32,
-                  ),
-                  const Spacer(),
                   const SizedBox(width: 40),
                 ],
               ),
@@ -93,10 +87,31 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             Expanded(
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                  child: _linkSent
-                      ? _buildSuccessMessage()
-                      : _buildForm(isLoading),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.08),
+                          blurRadius: 32,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 12),
+                        ),
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.05),
+                          blurRadius: 16,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: _linkSent
+                        ? _buildSuccessMessage()
+                        : _buildForm(isLoading),
+                  ),
                 ),
               ),
             ),
