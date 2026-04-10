@@ -165,7 +165,7 @@ class ChatbotNotifier extends Notifier<ChatState> {
     );
 
     try {
-      final context = _buildTransactionContext();
+      final context = await _buildTransactionContext();
       final response = await _aiService.sendMessage(
         text.trim(),
         transactionContext: context,
@@ -205,10 +205,12 @@ class ChatbotNotifier extends Notifier<ChatState> {
     }
   }
 
-  String _buildTransactionContext() {
+  Future<String> _buildTransactionContext() async {
     final transactions =
         ref.read(transactionsProvider).valueOrNull ?? [];
-    if (transactions.isEmpty) return 'No transactions yet.';
+
+    // Always await accounts to ensure they are loaded
+    final accounts = await ref.read(accountsProvider.future);
 
     final now = DateTime.now();
     final monthTx = transactions
@@ -222,8 +224,6 @@ class ChatbotNotifier extends Notifier<ChatState> {
         .where((t) => t.isExpense)
         .fold(0.0, (sum, t) => sum + t.amount);
 
-    final accounts = ref.read(accountsProvider).valueOrNull ?? [];
-
     final buffer = StringBuffer()
       ..writeln('Today: ${now.toIso8601String().split('T').first}')
       ..writeln('Current month: ${now.month}/${now.year}')
@@ -231,10 +231,14 @@ class ChatbotNotifier extends Notifier<ChatState> {
       ..writeln('Total expenses this month: $totalExpense')
       ..writeln('Net: ${totalIncome - totalExpense}')
       ..writeln('')
-      ..writeln('User accounts:');
+      ..writeln('User accounts (use the UUID field exactly when adding transactions):');
 
-    for (final a in accounts) {
-      buffer.writeln('- ${a.name} (${a.type}) | balance: ${a.balance} | id: ${a.id}');
+    if (accounts.isEmpty) {
+      buffer.writeln('  (no accounts found)');
+    } else {
+      for (final a in accounts) {
+        buffer.writeln('  NAME="${a.name}" TYPE="${a.type}" BALANCE=${a.balance} UUID=${a.id}');
+      }
     }
 
     final categoryTotals = <String, double>{};
@@ -251,15 +255,19 @@ class ChatbotNotifier extends Notifier<ChatState> {
       buffer.writeln('  ${entry.key}: ${entry.value}');
     }
 
-    buffer
-      ..writeln('')
-      ..writeln('Recent transactions (last 20):');
-
-    for (final t in transactions.take(20)) {
-      buffer.writeln(
-        '- id: ${t.id} | ${t.type}: ${t.amount} | ${t.category} | '
-        '${t.date.toIso8601String().split('T').first} | ${t.notes ?? ''}',
-      );
+    if (transactions.isEmpty) {
+      buffer.writeln('');
+      buffer.writeln('Recent transactions: none yet.');
+    } else {
+      buffer
+        ..writeln('')
+        ..writeln('Recent transactions (last 20):');
+      for (final t in transactions.take(20)) {
+        buffer.writeln(
+          '- id: ${t.id} | ${t.type}: ${t.amount} | ${t.category} | '
+          '${t.date.toIso8601String().split('T').first} | ${t.notes ?? ''}',
+        );
+      }
     }
 
     return buffer.toString();

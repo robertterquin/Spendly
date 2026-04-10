@@ -15,7 +15,7 @@ class AiService {
 
   static const _apiKey = 'YOUR_GROQ_API_KEY';
   static const _apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
-  static const _model = 'llama-3.1-8b-instant';
+  static const _model = 'llama-3.3-70b-versatile';
 
   final List<Map<String, String>> _history = [];
 
@@ -32,7 +32,11 @@ Income: Allowance, Salary, Gift, Side Hustle
 Expense: Food, Transport, School, Bills, Entertainment, Others
 
 ACCOUNTS:
-The user's accounts with balances and UUIDs are provided in the context. Always ask which account if the user doesn't specify one for add/transfer actions.
+The user's accounts are listed in the context in this format:
+  ACCOUNT_NAME (type) | balance: AMOUNT | id: UUID
+
+When the user mentions an account name (e.g. "Wallet", "Gcash", "Metrobank"), look up that name in the account list and copy its UUID exactly as-is into the JSON. Never use placeholder text like "Wallet UUID" — always use the real UUID string from the context.
+Only ask which account when the user gives no hint at all about which one to use.
 
 ─── ADDING A TRANSACTION ───
 When the user clearly wants to add a transaction, respond with ONLY a valid JSON object (no markdown, no extra text):
@@ -110,9 +114,10 @@ Reply with plain text only. Be concise, helpful, and friendly.
 
 RULES:
 • Only use the exact category names listed above.
-• If the user is vague about amount, category, or account, ask one short clarifying question.
-• Always include account_id when adding a transaction.
-• For transfers, always use both from_account_id and to_account_id.
+• If vague about amount or category, ask one short clarifying question.
+• Always include a real UUID for account_id — copy it directly from the context, never write a placeholder.
+• Never add comments (# ...) inside JSON — JSON must be pure and valid.
+• For transfers, always use both from_account_id and to_account_id as real UUIDs.
 • Keep responses short and mobile-friendly.
 • Never fabricate data — always base answers on the provided context.
 • Today's date and full transaction context are provided with each message.
@@ -171,7 +176,10 @@ RULES:
       final jsonStart = cleaned.indexOf('{');
       final jsonEnd = cleaned.lastIndexOf('}');
       if (jsonStart != -1 && jsonEnd > jsonStart) {
-        final jsonStr = cleaned.substring(jsonStart, jsonEnd + 1);
+        var jsonStr = cleaned.substring(jsonStart, jsonEnd + 1);
+        // Strip single-line comments that the model may incorrectly insert
+        jsonStr = jsonStr.replaceAll(RegExp(r'//[^\n]*'), '');
+        jsonStr = jsonStr.replaceAll(RegExp(r'#[^\n"]*'), '');
         final json = jsonDecode(jsonStr) as Map<String, dynamic>;
         if (json.containsKey('message')) {
           return AiResponse(
