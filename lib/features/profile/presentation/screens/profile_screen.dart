@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:spendly/features/auth/presentation/providers/auth_provider.dart';
 import 'package:spendly/features/auth/presentation/screens/get_started_screen.dart';
 import 'package:spendly/shared/theme/app_theme.dart';
@@ -10,9 +11,6 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).valueOrNull;
-    final initial = (user?.name.isNotEmpty == true)
-        ? user!.name[0].toUpperCase()
-        : '?';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -70,35 +68,7 @@ class ProfileScreen extends ConsumerWidget {
                       padding: const EdgeInsets.fromLTRB(20, 28, 20, 36),
                       child: Column(
                         children: [
-                          Container(
-                            width: 88,
-                            height: 88,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.white.withValues(alpha: 0.2),
-                                  Colors.white.withValues(alpha: 0.08),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.3),
-                                width: 2.5,
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                initial,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 34,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ),
+                          const _AvatarWidget(),
                           const SizedBox(height: 14),
                           Text(
                             user?.name ?? '',
@@ -330,6 +300,149 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+//  Avatar Widget
+// ─────────────────────────────────────────────────────────
+
+class _AvatarWidget extends ConsumerStatefulWidget {
+  const _AvatarWidget();
+
+  @override
+  ConsumerState<_AvatarWidget> createState() => _AvatarWidgetState();
+}
+
+class _AvatarWidgetState extends ConsumerState<_AvatarWidget> {
+  bool _uploading = false;
+
+  Future<void> _pick() async {
+    final picker = ImagePicker();
+    final image = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+      maxWidth: 512,
+    );
+    if (image == null || !mounted) return;
+    final bytes = await image.readAsBytes();
+    if (!mounted) return;
+    setState(() => _uploading = true);
+    try {
+      await ref
+          .read(authProvider.notifier)
+          .updateAvatar(bytes: bytes);
+    } catch (e) {
+      debugPrint('Avatar upload error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString().replaceFirst('Exception: ', '')),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _uploading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = ref.watch(authProvider).valueOrNull;
+    final initial = (user?.name.isNotEmpty == true)
+        ? user!.name[0].toUpperCase()
+        : '?';
+    final avatarUrl = user?.avatarUrl;
+
+    return GestureDetector(
+      onTap: _uploading ? null : _pick,
+      child: SizedBox(
+        width: 88,
+        height: 88,
+        child: Stack(
+          children: [
+            Container(
+              width: 88,
+              height: 88,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.white.withValues(alpha: 0.2),
+                    Colors.white.withValues(alpha: 0.08),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.3),
+                  width: 2.5,
+                ),
+              ),
+              child: _uploading
+                  ? const Center(
+                      child: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  : avatarUrl != null
+                      ? ClipOval(
+                          child: Image.network(
+                            avatarUrl,
+                            fit: BoxFit.cover,
+                            width: 88,
+                            height: 88,
+                            errorBuilder: (_, __, ___) => Center(
+                              child: Text(
+                                initial,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 34,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child: Text(
+                            initial,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 34,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                width: 26,
+                height: 26,
+                decoration: BoxDecoration(
+                  color: AppColors.secondary,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                child: const Icon(
+                  Icons.camera_alt_rounded,
+                  size: 13,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

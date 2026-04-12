@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendly/features/auth/data/auth_repository.dart';
 import 'package:spendly/features/auth/domain/user_model.dart';
@@ -98,6 +100,20 @@ class AuthNotifier extends Notifier<AsyncValue<UserModel?>> {
       await _repo.updatePassword(newPassword: newPassword);
     } on AuthException catch (e) {
       throw Exception(e.message);
+    }
+  }
+
+  Future<void> updateAvatar({required Uint8List bytes}) async {
+    final userId = state.valueOrNull?.id;
+    if (userId == null) throw Exception('Not authenticated.');
+    try {
+      final user = await _repo.uploadAvatar(userId: userId, bytes: bytes);
+      state = AsyncData(user);
+    } catch (e) {
+      final msg = e is Exception
+          ? e.toString().replaceFirst('Exception: ', '')
+          : e.toString();
+      throw Exception(msg);
     }
   }
 }

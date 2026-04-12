@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:spendly/features/auth/domain/user_model.dart';
 
@@ -49,6 +51,7 @@ class AuthRepository {
       id: user.id,
       name: name,
       email: user.email ?? email,
+      avatarUrl: user.userMetadata?['avatar_url'] as String?,
     );
   }
 
@@ -61,6 +64,7 @@ class AuthRepository {
       id: user.id,
       name: name,
       email: user.email ?? '',
+      avatarUrl: user.userMetadata?['avatar_url'] as String?,
     );
   }
 
@@ -82,10 +86,39 @@ class AuthRepository {
       id: user.id,
       name: name,
       email: user.email ?? '',
+      avatarUrl: user.userMetadata?['avatar_url'] as String?,
     );
   }
 
   Future<void> updatePassword({required String newPassword}) async {
     await _auth.updateUser(UserAttributes(password: newPassword));
+  }
+
+  Future<UserModel> uploadAvatar({
+    required String userId,
+    required Uint8List bytes,
+  }) async {
+    final storagePath = '$userId/avatar.jpg';
+    await _client.storage.from('avatars').uploadBinary(
+      storagePath,
+      bytes,
+      fileOptions: const FileOptions(upsert: true, contentType: 'image/jpeg'),
+    );
+    final publicUrl =
+        _client.storage.from('avatars').getPublicUrl(storagePath);
+    final avatarUrl =
+        '$publicUrl?t=${DateTime.now().millisecondsSinceEpoch}';
+    final response = await _auth.updateUser(
+      UserAttributes(data: {'avatar_url': avatarUrl}),
+    );
+    final updatedUser = response.user;
+    if (updatedUser == null) throw Exception('Avatar update failed.');
+    final name = updatedUser.userMetadata?['name'] as String? ?? '';
+    return UserModel(
+      id: updatedUser.id,
+      name: name,
+      email: updatedUser.email ?? '',
+      avatarUrl: avatarUrl,
+    );
   }
 }
