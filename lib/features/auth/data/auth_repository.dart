@@ -71,4 +71,21 @@ class AuthRepository {
   Future<void> sendPasswordReset({required String email}) async {
     await _auth.resetPasswordForEmail(email);
   }
+
+  Future<UserModel> updateProfile({required String name}) async {
+    final response = await _auth.updateUser(
+      UserAttributes(data: {'name': name}),
+    );
+    final user = response.user;
+    if (user == null) throw Exception('Profile update failed.');
+    return UserModel(
+      id: user.id,
+      name: name,
+      email: user.email ?? '',
+    );
+  }
+
+  Future<void> updatePassword({required String newPassword}) async {
+    await _auth.updateUser(UserAttributes(password: newPassword));
+  }
 }

@@ -83,4 +83,21 @@ class AuthNotifier extends Notifier<AsyncValue<UserModel?>> {
     await _repo.logout();
     state = const AsyncData(null);
   }
+
+  Future<void> updateProfile({required String name}) async {
+    try {
+      final user = await _repo.updateProfile(name: name);
+      state = AsyncData(user);
+    } on AuthException catch (e) {
+      throw Exception(e.message);
+    }
+  }
+
+  Future<void> updatePassword({required String newPassword}) async {
+    try {
+      await _repo.updatePassword(newPassword: newPassword);
+    } on AuthException catch (e) {
+      throw Exception(e.message);
+    }
+  }
 }
