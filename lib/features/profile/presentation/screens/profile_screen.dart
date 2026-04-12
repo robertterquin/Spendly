@@ -66,27 +66,32 @@ class ProfileScreen extends ConsumerWidget {
                     bottom: false,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20, 28, 20, 36),
-                      child: Column(
-                        children: [
-                          const _AvatarWidget(),
-                          const SizedBox(height: 14),
-                          Text(
-                            user?.name ?? '',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const _AvatarWidget(),
+                            const SizedBox(height: 14),
+                            Text(
+                              user?.name ?? '',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            user?.email ?? '',
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.72),
-                              fontSize: 13,
+                            const SizedBox(height: 4),
+                            Text(
+                              user?.email ?? '',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.72),
+                                fontSize: 13,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
