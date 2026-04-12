@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendly/features/auth/presentation/providers/auth_provider.dart';
-import 'package:spendly/features/auth/presentation/screens/login_screen.dart';
+import 'package:spendly/features/auth/presentation/screens/get_started_screen.dart';
 import 'package:spendly/shared/theme/app_theme.dart';
 import 'package:spendly/shared/widgets/app_navigation_shell.dart';
 
@@ -58,7 +58,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     } else {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const LoginScreen(),
+          pageBuilder: (_, __, ___) => const GetStartedScreen(),
           transitionsBuilder: (_, animation, __, child) {
             return FadeTransition(opacity: animation, child: child);
           },
