@@ -6,16 +6,16 @@ import 'package:spendly/features/charts/presentation/providers/chart_data_provid
 import 'package:spendly/shared/theme/app_theme.dart';
 
 const _categoryColors = <String, Color>{
-  'Food': Color(0xFFF97316),
-  'Transport': Color(0xFF3B82F6),
-  'School': Color(0xFF8B5CF6),
-  'Bills': Color(0xFFEF4444),
-  'Entertainment': Color(0xFFEC4899),
-  'Others': Color(0xFF64748B),
-  'Salary': Color(0xFF10B981),
-  'Allowance': Color(0xFF06B6D4),
-  'Gift': Color(0xFFF59E0B),
-  'Side Hustle': Color(0xFF14B8A6),
+  'Food': AppColors.primary,
+  'Transport': AppColors.tertiary,
+  'School': Color(0xFF2563EB),
+  'Bills': Color(0xFF475569),
+  'Entertainment': Color(0xFF94A3B8),
+  'Others': AppColors.textSecondary,
+  'Salary': AppColors.secondary,
+  'Allowance': Color(0xFF60A5FA),
+  'Gift': Color(0xFF34D399),
+  'Side Hustle': Color(0xFF0F2440),
 };
 
 class ChartsScreen extends ConsumerStatefulWidget {
@@ -510,11 +510,7 @@ class _SummaryCard extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [color.withValues(alpha: 0.15), color.withValues(alpha: 0.05)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(icon, size: 18, color: color),

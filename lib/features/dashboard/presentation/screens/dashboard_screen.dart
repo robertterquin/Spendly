@@ -188,143 +188,101 @@ class _HeroSection extends ConsumerWidget {
           colors: [
             Color(0xFF0F2440),
             AppColors.primary,
-            Color(0xFF1E4A7A),
           ],
-          stops: [0.0, 0.5, 1.0],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
         ),
       ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: -24,
-            right: -32,
-            child: Container(
-              width: 160,
-              height: 160,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.04),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 48,
-            right: 48,
-            child: Container(
-              width: 84,
-              height: 84,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.05),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 80,
-            left: -24,
-            child: Container(
-              width: 110,
-              height: 110,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.tertiary.withValues(alpha: 0.1),
-              ),
-            ),
-          ),
-          SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _greeting,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: Colors.white60,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              firstName,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 42,
-                        height: 42,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.15),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _greeting,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.white60,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        child: const Icon(
-                          Icons.notifications_outlined,
-                          color: Colors.white70,
-                          size: 20,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Container(
-                        width: 42,
-                        height: 42,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.3),
-                            width: 2,
+                        const SizedBox(height: 2),
+                        Text(
+                          firstName,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            letterSpacing: -0.3,
                           ),
                         ),
-                        child: avatarUrl != null
-                            ? ClipOval(
-                                child: Image.network(
-                                  avatarUrl,
-                                  width: 42,
-                                  height: 42,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => _InitialsAvatar(
-                                    initial: firstName[0].toUpperCase(),
-                                  ),
-                                ),
-                              )
-                            : _InitialsAvatar(
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.15),
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.notifications_outlined,
+                      color: Colors.white70,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.3),
+                        width: 2,
+                      ),
+                    ),
+                    child: avatarUrl != null
+                        ? ClipOval(
+                            child: Image.network(
+                              avatarUrl,
+                              width: 42,
+                              height: 42,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => _InitialsAvatar(
                                 initial: firstName[0].toUpperCase(),
                               ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  BalanceCard(
-                    totalBalance: summary.totalBalance,
-                    totalIncome: summary.totalIncome,
-                    totalExpense: summary.totalExpense,
+                            ),
+                          )
+                        : _InitialsAvatar(
+                            initial: firstName[0].toUpperCase(),
+                          ),
                   ),
                 ],
               ),
-            ),
+              const SizedBox(height: 24),
+              BalanceCard(
+                totalBalance: summary.totalBalance,
+                totalIncome: summary.totalIncome,
+                totalExpense: summary.totalExpense,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -341,11 +299,7 @@ class _InitialsAvatar extends StatelessWidget {
       height: 42,
       decoration: const BoxDecoration(
         shape: BoxShape.circle,
-        gradient: LinearGradient(
-          colors: [AppColors.secondary, Color(0xFF059669)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: AppColors.secondary,
       ),
       child: Center(
         child: Text(
@@ -367,12 +321,12 @@ class _CategoryBar extends StatelessWidget {
   final CategorySpending category;
 
   static const _categoryColors = {
-    'Food': Color(0xFFEF4444),
-    'Transport': Color(0xFF3B82F6),
-    'School': Color(0xFF8B5CF6),
-    'Bills': Color(0xFFF59E0B),
-    'Entertainment': Color(0xFFEC4899),
-    'Others': Color(0xFF6B7280),
+    'Food': AppColors.primary,
+    'Transport': AppColors.tertiary,
+    'School': Color(0xFF2563EB),
+    'Bills': Color(0xFF475569),
+    'Entertainment': Color(0xFF94A3B8),
+    'Others': AppColors.textSecondary,
   };
 
   static IconData _categoryIcon(String category) {
