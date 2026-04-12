@@ -164,7 +164,7 @@ class DashboardScreen extends ConsumerWidget {
   }
 }
 
-class _HeroSection extends StatelessWidget {
+class _HeroSection extends ConsumerWidget {
   const _HeroSection({required this.firstName, required this.summary});
 
   final String firstName;
@@ -178,7 +178,8 @@ class _HeroSection extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final avatarUrl = ref.watch(authProvider).valueOrNull?.avatarUrl;
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -289,23 +290,27 @@ class _HeroSection extends StatelessWidget {
                         width: 42,
                         height: 42,
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [AppColors.secondary, Color(0xFF059669)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: Center(
-                          child: Text(
-                            firstName[0].toUpperCase(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w700,
-                            ),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            width: 2,
                           ),
                         ),
+                        child: avatarUrl != null
+                            ? ClipOval(
+                                child: Image.network(
+                                  avatarUrl,
+                                  width: 42,
+                                  height: 42,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => _InitialsAvatar(
+                                    initial: firstName[0].toUpperCase(),
+                                  ),
+                                ),
+                              )
+                            : _InitialsAvatar(
+                                initial: firstName[0].toUpperCase(),
+                              ),
                       ),
                     ],
                   ),
@@ -320,6 +325,37 @@ class _HeroSection extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _InitialsAvatar extends StatelessWidget {
+  const _InitialsAvatar({required this.initial});
+  final String initial;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 42,
+      height: 42,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [AppColors.secondary, Color(0xFF059669)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Text(
+          initial,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
     );
   }
