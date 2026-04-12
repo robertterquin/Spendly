@@ -25,7 +25,7 @@ class ProfileScreen extends ConsumerWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFF0F2440),
+                    AppColors.primaryDark,
                     AppColors.primary,
                   ],
                 ),

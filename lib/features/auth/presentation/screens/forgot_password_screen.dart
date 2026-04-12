@@ -62,8 +62,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFFFFFFFF),
-              Color(0xFFE4EEF9),
+              Colors.white,
+              AppColors.background,
             ],
           ),
         ),
@@ -142,7 +142,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           width: 80,
           height: 80,
           decoration: BoxDecoration(
-            color: const Color(0xFFD1FAE5),
+            color: AppColors.secondary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(24),
           ),
           child: const Icon(
