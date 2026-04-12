@@ -186,7 +186,7 @@ class _HeroSection extends ConsumerWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF0F2440),
+            AppColors.primaryDark,
             AppColors.primary,
           ],
         ),
@@ -323,9 +323,9 @@ class _CategoryBar extends StatelessWidget {
   static const _categoryColors = {
     'Food': AppColors.primary,
     'Transport': AppColors.tertiary,
-    'School': Color(0xFF2563EB),
-    'Bills': Color(0xFF475569),
-    'Entertainment': Color(0xFF94A3B8),
+    'School': AppColors.primary,
+    'Bills': AppColors.textSecondary,
+    'Entertainment': AppColors.tertiary,
     'Others': AppColors.textSecondary,
   };
 

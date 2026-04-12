@@ -7,7 +7,7 @@ import 'package:spendly/shared/theme/app_theme.dart';
 const _kNavGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
-  colors: [Color(0xFF0F2440), AppColors.primary],
+  colors: [AppColors.primaryDark, AppColors.primary],
 );
 
 class ChatbotScreen extends ConsumerStatefulWidget {

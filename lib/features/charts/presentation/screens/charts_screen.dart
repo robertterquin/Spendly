@@ -8,14 +8,14 @@ import 'package:spendly/shared/theme/app_theme.dart';
 const _categoryColors = <String, Color>{
   'Food': AppColors.primary,
   'Transport': AppColors.tertiary,
-  'School': Color(0xFF2563EB),
-  'Bills': Color(0xFF475569),
-  'Entertainment': Color(0xFF94A3B8),
+  'School': AppColors.primary,
+  'Bills': AppColors.textSecondary,
+  'Entertainment': AppColors.tertiary,
   'Others': AppColors.textSecondary,
   'Salary': AppColors.secondary,
-  'Allowance': Color(0xFF60A5FA),
-  'Gift': Color(0xFF34D399),
-  'Side Hustle': Color(0xFF0F2440),
+  'Allowance': AppColors.tertiary,
+  'Gift': AppColors.secondary,
+  'Side Hustle': AppColors.primary,
 };
 
 class ChartsScreen extends ConsumerStatefulWidget {

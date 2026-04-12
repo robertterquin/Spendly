@@ -18,8 +18,8 @@ class GetStartedScreen extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               Colors.white,
-              Color(0xFFF0F4FA),
-              Color(0xFFE2EAF4),
+              AppColors.background,
+              AppColors.primaryLight,
             ],
             stops: [0.0, 0.6, 1.0],
           ),
