@@ -27,75 +27,45 @@ class ProfileScreen extends ConsumerWidget {
                   colors: [
                     Color(0xFF0F2440),
                     AppColors.primary,
-                    Color(0xFF2A4A7F),
                   ],
-                  stops: [0.0, 0.5, 1.0],
                 ),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(32),
                   bottomRight: Radius.circular(32),
                 ),
               ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: -20,
-                    right: -30,
-                    child: Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white.withValues(alpha: 0.04),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 20,
-                    left: -20,
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.tertiary.withValues(alpha: 0.08),
-                      ),
-                    ),
-                  ),
-                  SafeArea(
-                    bottom: false,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 28, 20, 36),
-                      child: Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const _AvatarWidget(),
-                            const SizedBox(height: 14),
-                            Text(
-                              user?.name ?? '',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              user?.email ?? '',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.72),
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 28, 20, 36),
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const _AvatarWidget(),
+                        const SizedBox(height: 14),
+                        Text(
+                          user?.name ?? '',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 4),
+                        Text(
+                          user?.email ?? '',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.72),
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
 
@@ -123,7 +93,7 @@ class ProfileScreen extends ConsumerWidget {
                       ),
                       _MenuItemData(
                         icon: Icons.notifications_none_rounded,
-                        iconColor: const Color(0xFFF59E0B),
+                        iconColor: AppColors.tertiary,
                         label: 'Notifications',
                         onTap: () => _showNotifications(context),
                       ),
@@ -865,7 +835,7 @@ class _NotificationsSheetState extends State<_NotificationsSheet> {
         children: [
           _ToggleRow(
             icon: Icons.notifications_active_outlined,
-            iconColor: const Color(0xFFF59E0B),
+            iconColor: AppColors.tertiary,
             label: 'Push Notifications',
             subtitle: 'Alerts for transactions and reminders',
             value: _push,
@@ -874,7 +844,7 @@ class _NotificationsSheetState extends State<_NotificationsSheet> {
           const Divider(height: 1, color: AppColors.border),
           _ToggleRow(
             icon: Icons.bar_chart_rounded,
-            iconColor: AppColors.tertiary,
+            iconColor: AppColors.primary,
             label: 'Weekly Summary',
             subtitle: 'Spending report every Monday',
             value: _weekly,
@@ -986,7 +956,7 @@ class _HelpSheet extends StatelessWidget {
           const Divider(height: 1, color: AppColors.border),
           _InfoRow(
             icon: Icons.question_answer_outlined,
-            iconColor: const Color(0xFFF59E0B),
+            iconColor: AppColors.primary,
             label: 'FAQ',
             value: 'View frequently asked questions',
           ),
