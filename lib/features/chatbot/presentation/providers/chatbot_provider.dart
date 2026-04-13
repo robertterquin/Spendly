@@ -211,6 +211,7 @@ class ChatbotNotifier extends Notifier<ChatState> {
 
     // Always await accounts to ensure they are loaded
     final accounts = await ref.read(accountsProvider.future);
+    final totalAccountsBalance = accounts.fold(0.0, (sum, a) => sum + a.balance);
 
     final now = DateTime.now();
     final monthTx = transactions
@@ -227,9 +228,10 @@ class ChatbotNotifier extends Notifier<ChatState> {
     final buffer = StringBuffer()
       ..writeln('Today: ${now.toIso8601String().split('T').first}')
       ..writeln('Current month: ${now.month}/${now.year}')
+      ..writeln('Total balance across all accounts: $totalAccountsBalance')
       ..writeln('Total income this month: $totalIncome')
       ..writeln('Total expenses this month: $totalExpense')
-      ..writeln('Net: ${totalIncome - totalExpense}')
+      ..writeln('Net this month: ${totalIncome - totalExpense}')
       ..writeln('')
       ..writeln('User accounts (use the UUID field exactly when adding transactions):');
 
