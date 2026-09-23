@@ -13,7 +13,7 @@ class AiResponse {
 class AiService {
   AiService();
 
-  static const _apiKey = 'YOUR_GROQ_API_KEY';
+  static const _apiKey = String.fromEnvironment('GROQ_API_KEY');
   static const _apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
   static const _model = 'llama-3.3-70b-versatile';
 
@@ -140,6 +140,13 @@ RULES:
     String message, {
     String? transactionContext,
   }) async {
+    if (_apiKey.isEmpty || _apiKey == 'YOUR_GROQ_API_KEY') {
+      return const AiResponse(
+        message:
+            'Groq API key is not configured. Please add GROQ_API_KEY to your .env file and run with --dart-define-from-file=.env.',
+      );
+    }
+
     final userContent = transactionContext != null
         ? '[Transaction Data]\n$transactionContext\n\n[User Message]\n$message'
         : message;
