@@ -49,3 +49,6 @@ app.*.map.json
 .env.*
 !.env.example
 
+
+# iOS build output
+/ios/build/
